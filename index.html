@@ -6,15 +6,20 @@
 <title>MARKET FORCES — A Firm's Journey</title>
 <style>
 :root{
-  --bg:#EEF2F9; --bg2:#F7F9FD; --surface:#FFFFFF; --surface2:#F6F9FD;
-  --ink:#0E1B2C; --ink2:#2F4360; --muted:#6B7C96; --faint:#93A2B8;
-  --line:#E1E7F1; --line2:#C9D4E4;
-  --brand:#1CADE4; --brand-d:#0B7FAE;
-  --good:#0E9F6E; --goodbg:#E8F7F0; --bad:#DA3A3F; --badbg:#FCEDEE;
-  --warn:#C2721A; --warnbg:#FDF3E3; --gold:#E8A317;
-  --r:16px; --r2:12px;
-  --sh:0 1px 2px rgba(14,27,44,.05), 0 10px 26px rgba(14,27,44,.07);
-  --sh2:0 2px 6px rgba(14,27,44,.06), 0 18px 44px rgba(14,27,44,.11);
+  --bg:#E9EEF6; --bg2:#F4F7FC; --surface:#FFFFFF; --surface2:#F6F9FD;
+  --ink:#122036; --ink2:#334155; --muted:#64748B; --faint:#94A3B8;
+  --line:#E3E8F1; --line2:#C7D2E3;
+  --brand:#2563EB; --brand-d:#1D4ED8; --brand-l:#3B82F6; --brand-soft:#EEF3FF;
+  --good:#0F9D74; --goodbg:#E7F6F0; --good-d:#0B7A59;
+  --bad:#E0494D; --badbg:#FDEEEF; --bad-d:#B42318;
+  --warn:#C97A13; --warnbg:#FDF4E4; --warn-d:#9A5C0A;
+  --gold:#D9A106; --goldbg:#FBF1D6;
+  --violet:#7C5CFC;
+  --r:18px; --r2:13px;
+  --font-sans:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+  --font-display:Georgia,"Times New Roman","Songti SC","SimSun",serif;
+  --sh:0 1px 2px rgba(16,24,40,.04), 0 14px 34px -14px rgba(16,42,84,.14);
+  --sh2:0 2px 8px rgba(16,24,40,.06), 0 22px 52px -16px rgba(16,42,84,.20);
 }
 html{font-size:19px}
 html[data-fs="s"]{font-size:16.5px}
@@ -22,274 +27,490 @@ html[data-fs="l"]{font-size:21.5px}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  background:
-    radial-gradient(1200px 600px at 12% -10%, #FFFFFF 0%, rgba(255,255,255,0) 60%),
-    radial-gradient(900px 500px at 100% 0%, #E5EEFA 0%, rgba(255,255,255,0) 55%),
-    var(--bg);
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(1100px 560px at 6% -12%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(940px 540px at 102% -8%, rgba(37,99,235,.10) 0%, rgba(37,99,235,0) 56%),
+    radial-gradient(820px 620px at 50% 118%, rgba(15,157,116,.07) 0%, rgba(15,157,116,0) 60%),
+    linear-gradient(rgba(18,32,54,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18,32,54,.04) 1px, transparent 1px);
+  background-size:auto,auto,auto,28px 28px,28px 28px;
   color:var(--ink);
-  font:1rem/1.5 "Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue","Microsoft YaHei",sans-serif;
-  min-height:100vh; -webkit-font-smoothing:antialiased;
+  font:1rem/1.55 var(--font-sans);
+  min-height:100vh; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
+::selection{background:rgba(37,99,235,.18)}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-thumb{background:#C4D0E2;border:3px solid var(--bg);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#A9BBD4}
+::-webkit-scrollbar-track{background:transparent}
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(120% 90% at 50% 40%, rgba(255,255,255,0) 55%, rgba(14,27,44,.05) 100%)}
-.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:1rem 1.1rem 4rem}
+  background:radial-gradient(130% 95% at 50% 35%, rgba(255,255,255,0) 52%, rgba(18,32,54,.06) 100%)}
+.shell{max-width:1180px;margin:0 auto;padding:1.15rem 1.15rem 4.2rem;transition:max-width .18s ease}
+.shell.rail-open{max-width:1560px}
+.shell.rail-shut{max-width:1250px}
+.railwrap{display:block}
+.shell.rail-open .railwrap{display:grid;grid-template-columns:minmax(0,1fr) 21rem;gap:1.35rem;align-items:start}
+.shell.rail-shut .railwrap{display:grid;grid-template-columns:minmax(0,1fr) 3.9rem;gap:.9rem;align-items:start}
+.pagecol{position:relative;z-index:1;min-width:0}
+
+/* ---------------- the task rail ----------------
+   Deliberately its own surface: never inside a data / simulation / choice /
+   report card, so "what am I supposed to do here" reads as a separate layer. */
+.taskrail{position:sticky;top:4.5rem;z-index:30}
+.taskrail.empty{display:none}
+.tr-card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);
+  border-radius:var(--r2);box-shadow:var(--sh);padding:.7rem .8rem .65rem;max-height:calc(100vh - 6rem);overflow:auto}
+.tr-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem}
+.tr-kick{flex:1;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tr-count{font-size:.78rem;font-weight:800;color:var(--brand-d);background:var(--brand-soft);
+  border-radius:99px;padding:.12rem .5rem;white-space:nowrap}
+.tr-count.all{color:var(--good);background:var(--goodbg)}
+.tr-toggle{border:1px solid var(--line2);background:var(--surface2);color:var(--ink2);cursor:pointer;
+  width:1.7rem;height:1.7rem;border-radius:8px;font-size:.8rem;line-height:1;display:grid;place-items:center;flex:0 0 auto}
+.tr-toggle:hover{background:var(--brand-soft);border-color:var(--brand)}
+.tr-sec{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;
+  margin:.5rem 0 .2rem;padding-top:.4rem;border-top:1px dashed var(--line)}
+.tr-sec:first-child{border-top:none;margin-top:0;padding-top:0}
+.tr-item{display:flex;gap:.5rem;align-items:flex-start;padding:.35rem 0;border-bottom:1px dashed var(--line)}
+.tr-item:last-child{border-bottom:none}
+.tr-dot{flex:0 0 auto;width:1.25rem;height:1.25rem;border-radius:50%;border:2px solid var(--line2);
+  display:grid;place-items:center;font-size:.68rem;font-weight:800;color:transparent;margin-top:.1rem}
+.tr-item.ok .tr-dot{background:var(--good);border-color:var(--good);color:#fff}
+.tr-item.armed .tr-dot{border-color:var(--gold);background:var(--goldbg);color:var(--gold)}
+.tr-txt{flex:1;min-width:0}
+.tr-lab{font-size:.8rem;line-height:1.35;font-weight:600}
+.tr-item.ok .tr-lab{color:var(--muted);font-weight:500}
+.tr-hint{font-size:.72rem;color:var(--muted);line-height:1.35;margin-top:.1rem}
+.tr-item.armed .tr-hint{color:var(--warn-d);font-weight:700}
+.tr-opt{font-size:.78rem;color:var(--ink2);background:var(--surface2);border:1px solid var(--line);
+  border-radius:9px;padding:.4rem .55rem;margin-top:.45rem;line-height:1.4}
+.tr-foot{font-size:.72rem;color:var(--muted);margin-top:.5rem;padding-top:.4rem;border-top:1px dashed var(--line)}
+.tr-tab{display:none;width:100%;background:var(--surface);border:1px solid var(--line);
+  border-left:4px solid var(--brand);border-radius:var(--r2);box-shadow:var(--sh);cursor:pointer;
+  padding:.55rem .2rem;text-align:center;color:var(--ink)}
+.tr-tab:hover{border-color:var(--brand)}
+.tr-tab-n{display:block;font-size:.95rem;font-weight:800;color:var(--brand-d)}
+.tr-tab-n.all{color:var(--good)}
+.tr-tab-l{display:block;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin-top:.1rem}
+.taskrail.shut .tr-card{display:none}
+.taskrail.shut .tr-tab{display:block}
+@media (max-width:1080px){
+  .shell.rail-open,.shell.rail-shut{max-width:1180px}
+  .shell.rail-open .railwrap,.shell.rail-shut .railwrap{grid-template-columns:minmax(0,1fr)}
+  .taskrail{position:sticky;top:3.5rem;order:-1;margin-bottom:.1rem}
+  .tr-card{max-height:none}
+}
 
 /* ---------------- top bar ---------------- */
-.topbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.86);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
-  display:flex;align-items:center;gap:.7rem;padding:.5rem 1.1rem;flex-wrap:wrap}
-.topbar .tb-firm{display:flex;align-items:center;gap:.5rem;font-weight:700}
-.tb-firm .chip{width:2rem;height:2rem;border-radius:9px;display:grid;place-items:center;
-  font-size:1.05rem;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.82);
+  backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);
+  border-bottom:1px solid rgba(199,210,227,.7);
+  box-shadow:0 4px 18px -12px rgba(16,42,84,.18);
+  display:flex;align-items:center;gap:.7rem;padding:.55rem 1.1rem;flex-wrap:wrap}
+.topbar .tb-firm{display:flex;align-items:center;gap:.55rem;font-weight:800;letter-spacing:-.01em}
+.tb-firm .chip{width:2.1rem;height:2.1rem;border-radius:11px;display:grid;place-items:center;
+  font-size:1.08rem;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35), 0 4px 10px -4px rgba(16,42,84,.35)}
 .tb-name{max-width:15ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tb-stats{margin-left:auto;display:flex;gap:.45rem;align-items:center;flex-wrap:wrap}
-.stat{background:var(--surface2);border:1px solid var(--line);border-radius:10px;
-  padding:.22rem .55rem;display:flex;flex-direction:column;line-height:1.15;min-width:5.2rem}
-.stat b{font-size:.95rem;font-variant-numeric:tabular-nums}
-.stat span{font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.stat{background:linear-gradient(#fff,#F5F8FD);border:1px solid var(--line);border-radius:11px;
+  padding:.24rem .6rem;display:flex;flex-direction:column;line-height:1.18;min-width:5.4rem;
+  box-shadow:inset 0 1px 0 #fff}
+.stat b{font-size:.95rem;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.stat span{font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:800}
 .stat.pos b{color:var(--good)} .stat.neg b{color:var(--bad)}
 .fsgroup{display:flex;gap:.2rem;align-items:center}
-.fsbtn{border:1px solid var(--line);background:#fff;border-radius:8px;width:1.6rem;height:1.6rem;
-  cursor:pointer;font-size:.72rem;font-weight:800;color:var(--muted);line-height:1}
-.fsbtn:hover{border-color:var(--line2);color:var(--ink)}
-.iconbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:.28rem .6rem;
-  cursor:pointer;font-size:.8rem;font-weight:700;color:var(--ink2)}
-.iconbtn:hover{border-color:var(--brand);color:var(--brand-d)}
+.fsbtn{border:1px solid var(--line);background:linear-gradient(#fff,#F6F9FE);border-radius:8px;width:1.65rem;height:1.65rem;
+  cursor:pointer;font-size:.72rem;font-weight:800;color:var(--muted);line-height:1;transition:all .12s ease}
+.fsbtn:hover{border-color:var(--brand);color:var(--brand-d);background:var(--brand-soft)}
+.iconbtn{border:1px solid var(--line);background:linear-gradient(#fff,#F6F9FE);border-radius:10px;padding:.32rem .65rem;
+  cursor:pointer;font-size:.8rem;font-weight:700;color:var(--ink2);transition:all .12s ease}
+.iconbtn:hover{border-color:var(--brand);color:var(--brand-d);background:var(--brand-soft)}
+.tb-progress{position:absolute;left:0;right:0;bottom:-1px;height:3px;background:rgba(199,210,227,.45)}
+.tb-progress i{display:block;height:100%;border-radius:0 3px 3px 0;
+  background:linear-gradient(90deg,var(--brand-l),var(--brand-d));box-shadow:0 0 8px rgba(37,99,235,.5);
+  transition:width .5s cubic-bezier(.2,.7,.2,1)}
 
 /* ---------------- cards & type ---------------- */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  box-shadow:var(--sh);padding:1.15rem 1.25rem;margin-bottom:1rem}
-.card.tight{padding:.85rem 1rem}
-.kicker{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-d)}
-h1{font-size:2rem;line-height:1.15;margin:.15rem 0 .35rem;letter-spacing:-.015em}
-h2{font-size:1.42rem;line-height:1.2;margin:.1rem 0 .3rem;letter-spacing:-.01em}
-h3{font-size:1.06rem;margin:.9rem 0 .35rem}
-.lead{font-size:1.05rem;color:var(--ink2);margin:.3rem 0 .5rem}
+  box-shadow:var(--sh);padding:1.3rem 1.4rem;margin-bottom:1.1rem;position:relative}
+.card.tight{padding:.95rem 1.1rem}
+.kicker{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-d);
+  display:inline-flex;align-items:center;gap:.5em}
+.kicker::before{content:'';width:3px;height:.95em;border-radius:2px;background:linear-gradient(var(--brand-l),var(--brand-d))}
+h1{font-family:var(--font-display);font-size:2.5rem;line-height:1.08;margin:.2rem 0 .4rem;letter-spacing:-.02em;color:var(--ink)}
+h2{font-family:var(--font-display);font-size:1.55rem;line-height:1.22;margin:.12rem 0 .35rem;letter-spacing:-.012em;color:var(--ink)}
+h3{font-size:1rem;margin:.95rem 0 .4rem;font-weight:800;letter-spacing:-.01em}
+.lead{font-size:1.06rem;color:var(--ink2);margin:.35rem 0 .55rem}
 .body{font-size:.95rem;color:var(--ink2)}
 .muted{color:var(--muted)}
 .small{font-size:.82rem}
 .tiny{font-size:.72rem}
-.narr{font-size:.96rem;color:var(--ink2);margin:.45rem 0}
+.narr{font-size:.96rem;color:var(--ink2);margin:.5rem 0;line-height:1.6}
 .narr b{color:var(--ink)}
 hr.sep{border:none;border-top:1px solid var(--line);margin:.9rem 0}
-ul.clean,ol.clean{margin:.4rem 0 .4rem 1.1rem;padding:0}
-ul.clean li,ol.clean li{margin:.28rem 0;font-size:.93rem;color:var(--ink2)}
+ul.clean,ol.clean{margin:.45rem 0 .45rem 1.15rem;padding:0}
+ul.clean li,ol.clean li{margin:.32rem 0;font-size:.93rem;color:var(--ink2);line-height:1.55}
+b{color:inherit}
+
+/* note surfaces (replace inline colour styles) */
+[data-note]{border:1px solid transparent;border-radius:var(--r2)}
+[data-note="flat"]{background:var(--surface2);border-color:var(--line)}
+[data-note="amber"]{background:linear-gradient(100deg,#FDF7E7,#FFFDF6);border-color:#EDD9A8}
+[data-note="blue"]{background:linear-gradient(100deg,#F2F7FF,#FBFDFF);border-color:#C7DCFB}
+[data-note="red"]{background:linear-gradient(100deg,#FDF0F1,#FFFDFD);border-color:#F6C7CB}
 
 /* ---------------- buttons ---------------- */
-.btn{border:1px solid var(--line2);background:#fff;color:var(--ink);border-radius:11px;
-  padding:.55rem .95rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;
-  transition:transform .08s ease, box-shadow .12s ease, border-color .12s ease}
-.btn:hover{border-color:var(--brand);color:var(--brand-d);box-shadow:0 3px 10px rgba(14,27,44,.08)}
-.btn:active{transform:translateY(1px)}
-.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 4px 14px rgba(28,173,228,.3)}
-.btn.primary:hover{background:var(--brand-d);border-color:var(--brand-d);color:#fff}
+.btn{border:1px solid var(--line2);background:linear-gradient(#fff,#F5F8FD);color:var(--ink);border-radius:12px;
+  padding:.58rem 1rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;
+  box-shadow:0 1px 2px rgba(16,24,40,.05),inset 0 1px 0 #fff;
+  transition:transform .1s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease, color .15s ease}
+.btn:hover{border-color:var(--brand);color:var(--brand-d);transform:translateY(-1px);
+  box-shadow:0 8px 18px -8px rgba(37,99,235,.4)}
+.btn:active{transform:translateY(0)}
+.btn.primary{background:linear-gradient(180deg,var(--brand-l),var(--brand-d));border-color:var(--brand-d);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 8px 20px -8px rgba(37,99,235,.55)}
+.btn.primary:hover{background:linear-gradient(180deg,var(--brand),#1B44C4);border-color:#1B44C4;color:#fff}
 .btn.wide{width:100%;justify-content:center}
-.btn:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
-.btnrow{display:flex;gap:.55rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
+.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none}
+.btnrow{display:flex;gap:.55rem;flex-wrap:wrap;align-items:center;margin-top:.95rem}
 .btnrow.right{justify-content:flex-end}
-.btn.big{padding:.7rem 1.3rem;font-size:1rem}
+.btn.big{padding:.72rem 1.35rem;font-size:1rem;border-radius:13px}
+.btn:focus-visible,.opt:focus-visible,.prod:focus-visible,.sw:focus-visible,.checkopt:focus-visible,
+.fsbtn:focus-visible,.iconbtn:focus-visible{outline:3px solid rgba(37,99,235,.25);outline-offset:2px}
 
 /* ---------------- progress steps ---------------- */
-.steps{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;margin:.2rem 0 .9rem}
-.stepdot{display:flex;align-items:center;gap:.35rem;font-size:.68rem;font-weight:800;
-  letter-spacing:.04em;text-transform:uppercase;color:var(--faint);
-  background:var(--surface2);border:1px solid var(--line);border-radius:99px;padding:.2rem .6rem}
-.stepdot.on{color:var(--brand-d);border-color:var(--brand);background:#E9F7FE}
-.stepdot.done{color:var(--good);border-color:#BFE8D6;background:var(--goodbg)}
+.steps{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;margin:.2rem 0 .95rem}
+.stepdot{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;font-weight:800;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--faint);
+  background:linear-gradient(#fff,#F3F6FB);border:1px solid var(--line);border-radius:99px;padding:.24rem .65rem}
+.stepdot.on{color:var(--brand-d);border-color:#B9D2FB;background:linear-gradient(#F4F8FF,#EAF1FF);
+  box-shadow:0 3px 10px -6px rgba(37,99,235,.5)}
+.stepdot.done{color:var(--good-d);border-color:#A8DEC8;background:linear-gradient(#EFFAF5,#E4F5EC)}
+.ch-icon{flex:none;width:3rem;height:3rem;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;
+  background:linear-gradient(140deg,#F4F8FF,#E3EDFF);border:1px solid #C7DCFB;
+  box-shadow:inset 0 1px 0 #fff,0 6px 14px -8px rgba(37,99,235,.45)}
 
 /* ---------------- setup ---------------- */
-.grid2{display:grid;grid-template-columns:1.25fr .95fr;gap:1rem;align-items:start}
+.grid2{display:grid;grid-template-columns:1.25fr .95fr;gap:1.1rem;align-items:start}
 .grid2.rev{grid-template-columns:.95fr 1.25fr}
-.prodgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin:.55rem 0 .2rem}
-.prod{border:2px solid var(--line);background:#fff;border-radius:13px;padding:.6rem .5rem;cursor:pointer;
-  text-align:center;transition:all .13s ease}
+.prodgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.6rem 0 .2rem}
+.prod{border:1.5px solid var(--line);background:linear-gradient(#fff,#FAFCFF);border-radius:15px;padding:.7rem .5rem .6rem;cursor:pointer;
+  text-align:center;transition:all .15s ease;position:relative;font-family:inherit}
 .prod:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:var(--sh)}
-.prod .em{font-size:1.7rem;line-height:1.1;display:block}
-.prod .nm{font-size:.78rem;font-weight:700;margin-top:.2rem;color:var(--ink2)}
+.prod .em{font-size:1.55rem;line-height:1;display:grid;place-items:center;width:3.1rem;height:3.1rem;margin:0 auto .35rem;
+  border-radius:12px;background:linear-gradient(145deg,#F4F8FE,#E9EFF8);box-shadow:inset 0 0 0 1px rgba(199,210,227,.6)}
+.prod .nm{font-size:.78rem;font-weight:800;margin-top:.2rem;color:var(--ink2)}
 .prod .un{font-size:.66rem;color:var(--muted)}
-.prod.sel{border-color:var(--brand);background:#F0FAFF;box-shadow:0 6px 18px rgba(28,173,228,.18)}
+.prod.sel{border-color:var(--brand);background:linear-gradient(160deg,#F6FAFF,#EBF2FF);
+  box-shadow:0 10px 24px -12px rgba(37,99,235,.5)}
 .prod.sel .nm{color:var(--brand-d)}
-.swatches{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0}
-.sw{width:2.1rem;height:2.1rem;border-radius:50%;cursor:pointer;border:3px solid #fff;
-  box-shadow:0 0 0 1.5px var(--line2);transition:transform .1s ease}
-.sw:hover{transform:scale(1.09)}
-.sw.sel{box-shadow:0 0 0 3px var(--ink)}
-input[type=text]{font:inherit;font-size:.95rem;padding:.5rem .7rem;border-radius:10px;
-  border:1.5px solid var(--line2);width:100%;background:#fff;color:var(--ink)}
-input[type=text]:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(28,173,228,.15)}
-.preview{border-radius:14px;padding:1rem;color:#fff;position:relative;overflow:hidden}
-.preview:after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(0,0,0,.30))}
+.prod.sel::after{content:'\2713';position:absolute;top:.4rem;right:.45rem;width:1.15rem;height:1.15rem;
+  border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#fff;font-size:.7rem;font-weight:900;
+  box-shadow:0 2px 6px -1px rgba(37,99,235,.6)}
+.swatches{display:flex;gap:.55rem;flex-wrap:wrap;margin:.55rem 0}
+.sw{width:2.2rem;height:2.2rem;border-radius:50%;cursor:pointer;border:3px solid #fff;
+  box-shadow:0 0 0 1.5px var(--line2),0 3px 8px -2px rgba(16,42,84,.25);transition:transform .12s ease;position:relative}
+.sw:hover{transform:scale(1.1)}
+.sw.sel{box-shadow:0 0 0 3px var(--ink),0 4px 10px -2px rgba(16,42,84,.35)}
+.sw.sel::after{content:'\2713';position:absolute;inset:0;display:grid;place-items:center;color:#fff;
+  font-size:.8rem;font-weight:900;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+input[type=text]{font:inherit;font-size:.95rem;padding:.55rem .75rem;border-radius:11px;
+  border:1.5px solid var(--line2);width:100%;background:#fff;color:var(--ink);transition:all .12s ease}
+input[type=text]:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px rgba(37,99,235,.14)}
+.preview{border-radius:16px;padding:1.15rem;color:#fff;position:relative;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 16px 34px -16px rgba(16,42,84,.5)}
+.preview::before{content:'';position:absolute;inset:0;opacity:.16;
+  background-image:radial-gradient(rgba(255,255,255,.9) 1.4px,transparent 1.5px);background-size:15px 15px}
+.preview::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.24),rgba(0,0,0,.32))}
 .preview .pv-in{position:relative;z-index:2}
-.preview .pv-em{font-size:2.6rem;line-height:1}
-.preview .pv-nm{font-size:1.15rem;font-weight:800;margin-top:.25rem;text-shadow:0 1px 3px rgba(0,0,0,.25)}
-.preview .pv-tag{font-size:.72rem;opacity:.92;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
-.tagline{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
+.preview .pv-em{font-size:2.7rem;line-height:1;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25))}
+.preview .pv-nm{font-family:var(--font-display);font-size:1.25rem;font-weight:700;margin-top:.3rem;text-shadow:0 1px 4px rgba(0,0,0,.3)}
+.preview .pv-tag{font-size:.72rem;opacity:.92;letter-spacing:.05em;text-transform:uppercase;font-weight:700}
+.tagline{font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;opacity:.9}
 
 /* ---------------- tables ---------------- */
 table.dt{width:100%;border-collapse:collapse;font-size:.82rem;font-variant-numeric:tabular-nums}
-table.dt th{background:var(--surface2);color:var(--muted);font-size:.68rem;text-transform:uppercase;
-  letter-spacing:.05em;font-weight:800;padding:.4rem .4rem;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.dt th{background:linear-gradient(#F6F9FE,#EFF3F9);color:var(--muted);font-size:.67rem;text-transform:uppercase;
+  letter-spacing:.07em;font-weight:800;padding:.48rem .55rem;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 table.dt th:first-child,table.dt td:first-child{text-align:left}
-table.dt td{padding:.34rem .4rem;border-bottom:1px solid #F0F3F9;text-align:right;color:var(--ink2)}
-table.dt tr.hl td{background:#FFF9E8;color:var(--ink);font-weight:800}
-table.dt tr.pick td{background:#E9F7FE;color:var(--brand-d);font-weight:800}
+table.dt td{padding:.38rem .55rem;border-bottom:1px solid #EEF2F8;text-align:right;color:var(--ink2)}
+table.dt tbody tr:nth-child(even) td{background:#FAFBFE}
+table.dt tbody tr:hover td{background:#F1F6FF}
+table.dt tr.hl td{background:linear-gradient(#FEF7DF,#FDF2D2)!important;color:var(--ink);font-weight:800}
+table.dt tr.pick td{background:#EAF2FF!important;color:var(--brand-d);font-weight:800}
 table.dt td.bad{color:var(--bad)} table.dt td.good{color:var(--good)}
-.scroll{overflow:auto;border:1px solid var(--line);border-radius:var(--r2);max-height:23rem}
+.scroll{overflow:auto;border:1px solid var(--line);border-radius:var(--r2);max-height:23rem;background:#fff;
+  box-shadow:inset 0 1px 3px rgba(16,42,84,.04)}
 
-table.mx{width:100%;border-collapse:separate;border-spacing:.3rem;font-size:.9rem}
-table.mx th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800;padding:.3rem}
-table.mx td{border:1.5px solid var(--line);border-radius:11px;padding:.55rem .4rem;text-align:center;
-  background:var(--surface2);font-variant-numeric:tabular-nums}
-table.mx td small{display:block;font-size:.68rem;color:var(--muted);font-weight:700}
-table.mx td.you{background:#E9F7FE;border-color:var(--brand)}
+table.mx{width:100%;border-collapse:separate;border-spacing:.35rem;font-size:.9rem}
+table.mx th{font-size:.71rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;padding:.3rem}
+table.mx td{border:1.5px solid var(--line);border-radius:13px;padding:.6rem .4rem;text-align:center;
+  background:linear-gradient(#fff,#F8FAFD);font-variant-numeric:tabular-nums;
+  box-shadow:inset 0 1px 0 #fff;transition:all .12s ease}
+table.mx td small{display:block;font-size:.67rem;color:var(--muted);font-weight:700;margin-top:.15rem}
+table.mx td.you{background:linear-gradient(#F4F8FF,#E9F1FF);border-color:var(--brand);
+  box-shadow:0 6px 16px -10px rgba(37,99,235,.5),inset 0 1px 0 #fff}
 table.mx td.you b{color:var(--brand-d)}
-table.mx td b{font-size:1.05rem}
-table.mx td.taken{box-shadow:inset 0 0 0 3px rgba(232,163,23,.55);background:#FFF9E8}
+table.mx td b{font-size:1.06rem}
+table.mx td.taken{box-shadow:inset 0 0 0 3px rgba(217,161,6,.6);background:linear-gradient(#FEF9E6,#FDF1CE)}
 
 /* ---------------- metric tiles ---------------- */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.4rem,1fr));gap:.45rem;margin:.6rem 0}
-.tile{background:var(--surface2);border:1px solid var(--line);border-radius:var(--r2);padding:.45rem .5rem}
-.tile .tl{font-size:.63rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800}
-.tile .tv{font-size:1.16rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
-.tile .ts{font-size:.66rem;color:var(--faint)}
-.tile.pos .tv{color:var(--good)} .tile.neg .tv{color:var(--bad)}
-.tile.hi{background:#F0FAFF;border-color:#BCE6F8}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.6rem,1fr));gap:.5rem;margin:.6rem 0}
+.tile{background:linear-gradient(#fff,#F8FAFD);border:1px solid var(--line);border-radius:var(--r2);
+  padding:.5rem .55rem .5rem .65rem;position:relative;overflow:hidden;transition:all .13s ease}
+.tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent}
+.tile:hover{transform:translateY(-1px);box-shadow:0 8px 18px -12px rgba(16,42,84,.3)}
+.tile .tl{font-size:.61rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800;line-height:1.3}
+.tile .tv{font-size:1.16rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.25;letter-spacing:-.01em}
+.tile .ts{font-size:.65rem;color:var(--faint);line-height:1.35}
+.tile.pos::before{background:var(--good)} .tile.pos .tv{color:var(--good)}
+.tile.neg::before{background:var(--bad)} .tile.neg .tv{color:var(--bad)}
+.tile.hi{background:linear-gradient(#F5F9FF,#ECF3FF);border-color:#C7DCFB}
+.tile.hi::before{background:var(--brand)}
 .tile.hi .tv{color:var(--brand-d)}
-.tile.warn{background:var(--warnbg);border-color:#F0DDB8}
+.tile.warn{background:linear-gradient(#FDF8EC,#FDF2DC);border-color:#EEDBAD}
+.tile.warn::before{background:var(--warn)}
 
 /* ---------------- controls ---------------- */
-.ctl{margin:.85rem 0}
-.ctl .clab{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;margin-bottom:.3rem}
+.ctl{margin:.9rem 0}
+.ctl .clab{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;margin-bottom:.35rem}
 .ctl .clab .t{font-size:.85rem;font-weight:800;color:var(--ink)}
 .ctl .clab .v{font-size:1.15rem;font-weight:800;color:var(--brand-d);font-variant-numeric:tabular-nums}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:1.35rem;background:transparent;cursor:pointer;margin:0}
-input[type=range]::-webkit-slider-runnable-track{height:.5rem;border-radius:99px;background:linear-gradient(90deg,#D5E6F5,#C9D4E4)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:1.45rem;height:1.45rem;border-radius:50%;
-  background:var(--brand);border:3px solid #fff;box-shadow:0 1px 6px rgba(14,27,44,.35);margin-top:-.48rem}
-input[type=range]::-moz-range-track{height:.5rem;border-radius:99px;background:#D5E6F5}
-input[type=range]::-moz-range-thumb{width:1.35rem;height:1.35rem;border-radius:50%;background:var(--brand);
-  border:3px solid #fff;box-shadow:0 1px 6px rgba(14,27,44,.35)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:1.5rem;background:transparent;cursor:pointer;margin:0;--pct:50%}
+input[type=range]::-webkit-slider-runnable-track{height:.55rem;border-radius:99px;
+  background:linear-gradient(90deg,var(--brand-l) var(--pct),#DCE4EF var(--pct));
+  box-shadow:inset 0 1px 2px rgba(16,42,84,.12)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:1.5rem;height:1.5rem;border-radius:50%;
+  background:linear-gradient(180deg,#fff,#E6EEFB);border:3px solid var(--brand);
+  box-shadow:0 2px 8px rgba(16,42,84,.35),inset 0 1px 0 #fff;margin-top:-.48rem;transition:transform .1s ease}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.08)}
+input[type=range]::-moz-range-track{height:.55rem;border-radius:99px;background:#DCE4EF;
+  box-shadow:inset 0 1px 2px rgba(16,42,84,.12)}
+input[type=range]::-moz-range-progress{height:.55rem;border-radius:99px;background:var(--brand-l)}
+input[type=range]::-moz-range-thumb{width:1.2rem;height:1.2rem;border-radius:50%;
+  background:linear-gradient(180deg,#fff,#E6EEFB);border:3px solid var(--brand);
+  box-shadow:0 2px 8px rgba(16,42,84,.35)}
 .ticks{display:flex;justify-content:space-between;font-size:.66rem;color:var(--faint);font-weight:700;margin-top:.05rem}
 .optrow{display:flex;gap:.5rem;flex-wrap:wrap;margin:.4rem 0}
-.opt{border:2px solid var(--line);background:#fff;border-radius:12px;padding:.5rem .8rem;cursor:pointer;
-  font-weight:700;font-size:.85rem;color:var(--ink2);transition:all .12s ease;text-align:left}
-.opt:hover{border-color:var(--line2)}
-.opt.sel{border-color:var(--brand);background:#F0FAFF;color:var(--brand-d)}
-.opt small{display:block;font-weight:600;font-size:.66rem;color:var(--muted)}
-.opt.sel small{color:var(--brand-d)}
+.opt{border:1.5px solid var(--line);background:linear-gradient(#fff,#F8FBFE);border-radius:13px;padding:.55rem .85rem;cursor:pointer;
+  font-weight:800;font-size:.85rem;color:var(--ink2);transition:all .14s ease;text-align:left;font-family:inherit}
+.opt:hover{border-color:var(--line2);transform:translateY(-1px);box-shadow:0 6px 14px -10px rgba(16,42,84,.3)}
+.opt.sel{border-color:var(--brand);background:linear-gradient(160deg,#F5F9FF,#EAF1FF);color:var(--brand-d);
+  box-shadow:0 8px 18px -12px rgba(37,99,235,.55)}
+.opt small{display:block;font-weight:600;font-size:.66rem;color:var(--muted);margin-top:.1rem}
+.opt.sel small{color:#5B7FCF}
 
 /* ---------------- check / quiz ---------------- */
-.checkopt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#fff;
-  border-radius:12px;padding:.6rem .8rem;margin:.4rem 0;cursor:pointer;font-size:.9rem;font-weight:600;
-  color:var(--ink2);font-family:inherit;transition:all .12s ease}
-.checkopt:hover{border-color:var(--brand);color:var(--ink)}
-.checkopt.ok{border-color:var(--good);background:var(--goodbg);color:#0A6B4A}
-.checkopt.no{border-color:var(--bad);background:var(--badbg);color:#9B2226}
-.fb{margin-top:.6rem;padding:.65rem .8rem;border-radius:var(--r2);font-size:.87rem;display:none}
-.fb.show{display:block}
-.fb.ok{background:var(--goodbg);border-left:4px solid var(--good);color:#0A5C40}
-.fb.no{background:var(--badbg);border-left:4px solid var(--bad);color:#8E2124}
+.checkopt{display:flex;align-items:center;gap:.65rem;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:linear-gradient(#fff,#F9FBFE);border-radius:13px;padding:.65rem .85rem;margin:.45rem 0;cursor:pointer;
+  font-size:.9rem;font-weight:600;color:var(--ink2);font-family:inherit;transition:all .13s ease}
+.checkopt:hover{border-color:var(--brand);color:var(--ink);transform:translateX(2px)}
+.checkopt .optkey{flex:none;width:1.5rem;height:1.5rem;border-radius:9px;display:grid;place-items:center;
+  font-size:.75rem;font-weight:900;background:var(--brand-soft);color:var(--brand-d);border:1px solid #C7DCFB}
+.checkopt.ok{border-color:var(--good);background:linear-gradient(100deg,#EDFAF4,#F7FDF9);color:#0A5C40}
+.checkopt.ok .optkey{background:var(--good);color:#fff;border-color:var(--good)}
+.checkopt.no{border-color:var(--bad);background:linear-gradient(100deg,#FDEEEF,#FFF9F9);color:#A3271B}
+.checkopt.no .optkey{background:var(--bad);color:#fff;border-color:var(--bad)}
+.fb{margin-top:.65rem;padding:.7rem .9rem;border-radius:var(--r2);font-size:.87rem;line-height:1.55;display:none}
+.fb.show{display:block;animation:rise .35s ease both}
+.fb.ok{background:linear-gradient(100deg,#EDFAF4,#F7FDF9);border-left:4px solid var(--good);color:#0A5C40}
+.fb.no{background:linear-gradient(100deg,#FDEEEF,#FFF9F9);border-left:4px solid var(--bad);color:#A3271B}
 
 /* ---------------- event / narrative ---------------- */
-.event{border-left:5px solid var(--brand);background:linear-gradient(100deg,#F4FBFF,#FFFFFF 40%)}
-.event.warn{border-left-color:var(--warn);background:linear-gradient(100deg,#FEF7EA,#FFFFFF 40%)}
-.event.bad{border-left-color:var(--bad);background:linear-gradient(100deg,#FDF0F0,#FFFFFF 40%)}
-.event.good{border-left-color:var(--good);background:linear-gradient(100deg,#EEFAF4,#FFFFFF 40%)}
-.evt-tag{display:inline-block;font-size:.64rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
-  padding:.16rem .5rem;border-radius:99px;background:var(--ink);color:#fff}
-.evt-tag.warn{background:var(--warn)} .evt-tag.bad{background:var(--bad)} .evt-tag.good{background:var(--good)}
-.pricetag{display:inline-flex;align-items:baseline;gap:.35rem;background:var(--ink);color:#fff;
-  border-radius:12px;padding:.3rem .7rem;font-weight:800}
-.pricetag .old{font-size:.8rem;opacity:.6;text-decoration:line-through}
-.pricetag .new{font-size:1.25rem}
+.event{border-left:5px solid var(--brand);background:linear-gradient(105deg,#F3F9FF,#FFFFFF 45%);overflow:hidden}
+.event.warn{border-left-color:var(--warn);background:linear-gradient(105deg,#FEF7E8,#FFFFFF 45%)}
+.event.bad{border-left-color:var(--bad);background:linear-gradient(105deg,#FDEEEF,#FFFFFF 45%)}
+.event.good{border-left-color:var(--good);background:linear-gradient(105deg,#ECFAF3,#FFFFFF 45%)}
+.event::after{content:'\25C6';position:absolute;right:1rem;top:1.4rem;font-size:5.5rem;line-height:1;
+  font-weight:900;opacity:.06;pointer-events:none}
+.event.warn::after{content:'!'}
+.event.bad::after{content:'\2715'}
+.event.good::after{content:'\2713'}
+.evt-tag{display:inline-block;font-size:.62rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;
+  padding:.2rem .6rem;border-radius:99px;background:linear-gradient(180deg,#26364F,#122036);color:#fff;
+  box-shadow:0 4px 10px -4px rgba(16,42,84,.5)}
+.evt-tag.warn{background:linear-gradient(180deg,#D98A26,#B7680B)}
+.evt-tag.bad{background:linear-gradient(180deg,#E96063,#C93337)}
+.evt-tag.good{background:linear-gradient(180deg,#17B384,#0B825F)}
+.pricetag{display:inline-flex;align-items:baseline;gap:.4rem;border-radius:11px;padding:.35rem .8rem;font-weight:800;
+  color:#fff;background:linear-gradient(180deg,#26364F,#0E1828);box-shadow:0 8px 18px -10px rgba(16,42,84,.6),inset 0 1px 0 rgba(255,255,255,.18)}
+.pricetag .old{font-size:.8rem;opacity:.55;text-decoration:line-through}
+.pricetag .new{font-size:1.28rem;font-variant-numeric:tabular-nums}
 .delta{font-weight:800;font-size:.85rem}
 .delta.up{color:var(--good)} .delta.down{color:var(--bad)}
+.delta.up::before{content:'\25B2\00a0';font-size:.7em}
+.delta.down::before{content:'\25BC\00a0';font-size:.7em}
 
 /* ---------------- chart ---------------- */
-.chartcard{background:var(--surface2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .35rem .2rem;margin:.7rem 0}
-.labctl{position:sticky;top:3.4rem;z-index:20;box-shadow:var(--sh2);margin-bottom:.9rem}
+.chartcard{background:#fff;border:1px solid var(--line);border-radius:15px;padding:.55rem .4rem .2rem;margin:.75rem 0;
+  box-shadow:0 1px 2px rgba(16,24,40,.04),inset 0 1px 0 #fff}
+.labctl{position:sticky;top:3.6rem;z-index:20;box-shadow:var(--sh2);margin-bottom:.95rem}
 .chartcard svg{display:block;width:100%;height:auto}
 .legend{display:flex;gap:.75rem;flex-wrap:wrap;font-size:.72rem;color:var(--ink2);font-weight:700;
   padding:.15rem .6rem .45rem}
-.legend i{display:inline-block;width:.85rem;height:.2rem;border-radius:2px;margin-right:.3rem;vertical-align:middle}
-.legend i.dot{width:.5rem;height:.5rem;border-radius:50%}
+.legend i{display:inline-block;width:.9rem;height:.25rem;border-radius:2px;margin-right:.3rem;vertical-align:middle}
+.legend i.dot{width:.55rem;height:.55rem;border-radius:50%}
 svg text{font-family:inherit}
 .ct{fill:var(--faint);font-size:.68rem}
 .cl{fill:var(--ink2);font-size:.76rem;font-weight:800}
 .cn{fill:var(--ink);font-size:.78rem;font-weight:800}
-.ca{fill:var(--muted);font-size:.74rem;font-weight:800;letter-spacing:.03em}
+.ca{fill:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.04em}
 .cw{fill:#fff;font-size:.75rem;font-weight:900}
-.ax{stroke:var(--line2);stroke-width:1.4;fill:none}
-.gr{stroke:#DDE5F0;stroke-width:1;stroke-dasharray:2 4}
+.ax{stroke:#B9C6D9;stroke-width:1.6;fill:none}
+.gr{stroke:#E8EEF6;stroke-width:1;stroke-dasharray:3 5}
 .bar-axis{stroke:var(--ink2);stroke-width:1.6}
-rect.zone-good{fill:#0E9F6E;opacity:.13}
-rect.zone-bad{fill:#DA3A3F;opacity:.13}
-polygon.dwl{fill:#DA3A3F;opacity:.2;stroke:#DA3A3F;stroke-width:1.2}
-.line-profit{stroke:#E8A317;stroke-width:1.4;stroke-dasharray:4 3}
+rect.zone-good{fill:#0F9D74;opacity:.13}
+rect.zone-bad{fill:#E0494D;opacity:.13}
+polygon.dwl{fill:#E0494D;opacity:.2;stroke:#E0494D;stroke-width:1.2}
+.line-profit{stroke:#D9A106;stroke-width:1.4;stroke-dasharray:4 3}
 
 /* ---------------- misc ---------------- */
 .pill{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
-  padding:.2rem .55rem;border-radius:99px;background:var(--surface2);border:1px solid var(--line);color:var(--muted)}
-.pill.b{background:#E9F7FE;border-color:#BCE6F8;color:var(--brand-d)}
-.pill.g{background:var(--goodbg);border-color:#BFE8D6;color:#0A6B4A}
-.pill.w{background:var(--warnbg);border-color:#F0DDB8;color:#8A5210}
-.pill.r{background:var(--badbg);border-color:#F6CFD1;color:#9B2226}
-.shoprow{display:flex;gap:.45rem;flex-wrap:wrap;align-items:flex-end}
-.shop{border-radius:11px;padding:.4rem .55rem;text-align:center;font-size:.62rem;font-weight:800;color:#fff;
-  min-width:4.2rem;box-shadow:var(--sh);position:relative;transition:all .3s ease}
-.shop.closed{filter:grayscale(1);opacity:.32}
-.shop .e{font-size:1.15rem;display:block}
-.shop.mine{box-shadow:0 0 0 3px var(--gold),var(--sh)}
-.scoreline{display:flex;justify-content:space-between;gap:.6rem;padding:.45rem .1rem;border-bottom:1px dashed var(--line);font-size:.88rem}
+  padding:.22rem .6rem;border-radius:99px;background:var(--surface2);border:1px solid var(--line);color:var(--muted)}
+.pill.b{background:var(--brand-soft);border-color:#C7DCFB;color:var(--brand-d)}
+.pill.g{background:linear-gradient(180deg,#17B384,#0B825F);border-color:#0B825F;color:#fff}
+.pill.w{background:var(--warnbg);border-color:#EEDBAD;color:var(--warn-d)}
+.pill.amber{background:linear-gradient(180deg,#F6D98A,#E2A93A);border-color:#C9922A;color:#4A3200;
+  animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(-1px);opacity:.82}}
+.pill.r{background:var(--badbg);border-color:#F6C7CB;color:var(--bad-d)}
+.pill.coin{background:linear-gradient(180deg,#FBE089,#E8B10A);border-color:#D29A05;color:#6B4E00;
+  box-shadow:0 3px 8px -3px rgba(217,161,6,.6),inset 0 1px 0 rgba(255,255,255,.6)}
+.shoprow{display:flex;gap:.5rem;flex-wrap:wrap;align-items:stretch;margin:.3rem 0}
+.shop{--shop:var(--brand);position:relative;border-radius:13px;padding:1.35rem .45rem .5rem;text-align:center;
+  font-size:.6rem;font-weight:800;color:var(--ink2);min-width:5rem;
+  background:linear-gradient(#fff,#F6F9FD);border:1.5px solid #DFE7F2;
+  box-shadow:var(--sh);transition:all .3s ease}
+.shop::before{content:'';position:absolute;left:0;right:0;top:0;height:14px;border-radius:11px 11px 3px 3px;
+  background:repeating-linear-gradient(45deg,var(--shop) 0 8px,#fff 8px 16px);
+  box-shadow:0 2px 4px -2px rgba(16,42,84,.3)}
+.shop .e{display:grid;place-items:center;width:2.1rem;height:2.1rem;margin:0 auto .25rem;border-radius:50%;
+  font-size:1.1rem;background:#fff;border:1.5px solid var(--shop);box-shadow:0 3px 8px -4px rgba(16,42,84,.35)}
+.shop > div{line-height:1.3;padding:0 .15rem}
+.shop > div + div{font-weight:600;color:var(--muted)}
+.shop.closed{filter:grayscale(1);opacity:.4}
+.shop.mine{border-color:var(--gold);box-shadow:0 0 0 2.5px var(--gold),var(--sh)}
+.shop.mine::after{content:'YOU';position:absolute;top:-.5rem;right:-.55rem;background:linear-gradient(180deg,#F2C037,#D9A106);
+  color:#5C4400;font-size:.55rem;font-weight:900;letter-spacing:.08em;padding:.14rem .36rem;border-radius:99px;
+  box-shadow:0 3px 7px -2px rgba(217,161,6,.7);transform:rotate(6deg)}
+.scoreline{display:flex;justify-content:space-between;gap:.6rem;padding:.5rem .15rem;
+  border-bottom:1px dashed #E6ECF5;font-size:.88rem;transition:background .12s ease}
+.scoreline:hover{background:#F8FAFE}
 .scoreline b{font-variant-numeric:tabular-nums}
-.bigscore{font-size:2.4rem;font-weight:900;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
-.rankcard{border-radius:var(--r);padding:1.1rem;color:#fff;background:linear-gradient(135deg,var(--brand),#0B6E9E)}
-.rankcard h2{color:#fff;margin:0}
-.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(220%);bottom:1.2rem;z-index:80;
-  background:var(--ink);color:#fff;padding:.6rem 1rem;border-radius:12px;font-weight:700;font-size:.88rem;
-  box-shadow:var(--sh2);transition:transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .25s ease,visibility .25s;
-  opacity:0;visibility:hidden;pointer-events:none;max-width:80vw;text-align:center}
+.bigscore{font-family:var(--font-display);font-size:2.7rem;font-weight:700;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;line-height:1}
+.rankcard{border-radius:20px;padding:1.4rem 1.6rem;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#1E3A8A 0%,#2563EB 55%,#0EA5E9 100%);
+  box-shadow:0 22px 46px -20px rgba(29,78,216,.6)}
+.rankcard::before{content:'';position:absolute;inset:0;opacity:.25;
+  background-image:radial-gradient(rgba(255,255,255,.85) 1.4px,transparent 1.5px);background-size:19px 19px}
+.rankcard::after{content:'';position:absolute;width:17rem;height:17rem;right:-5rem;top:-7rem;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.22),transparent 70%)}
+.rankcard>*{position:relative;z-index:1}
+.rankcard h2{color:#fff;margin:0;font-size:2.1rem}
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(220%);bottom:1.3rem;z-index:80;
+  background:rgba(18,32,54,.94);backdrop-filter:blur(8px);color:#fff;padding:.65rem 1.15rem;border-radius:99px;
+  font-weight:700;font-size:.88rem;box-shadow:0 16px 36px -10px rgba(16,42,84,.5);
+  transition:transform .32s cubic-bezier(.2,.9,.3,1.2),opacity .25s ease,visibility .25s;
+  opacity:0;visibility:hidden;pointer-events:none;max-width:84vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
-.optgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0 .2rem}
-.modal{position:fixed;inset:0;z-index:90;background:rgba(14,27,44,.55);display:none;padding:1.2rem}
-.modal.show{display:block}
-.sheet{background:#fff;max-width:900px;margin:0 auto;border-radius:var(--r);box-shadow:var(--sh2);
-  max-height:calc(100vh - 2.4rem);overflow:auto;padding:1.4rem 1.6rem}
+.optgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin:.5rem 0 .2rem}
+.optgrid3 .opt{position:relative}
+.optgrid3 .opt.sel::after{content:'\2713';position:absolute;top:.4rem;right:.5rem;color:var(--brand);font-weight:900}
+.modal{position:fixed;inset:0;z-index:90;background:rgba(15,23,42,.46);backdrop-filter:blur(4px);
+  display:none;padding:1.2rem;overflow:auto}
+.modal.show{display:block;animation:fadeBg .25s ease both}
+.sheet{background:#fff;max-width:900px;margin:0 auto;border-radius:20px;box-shadow:var(--sh2);
+  max-height:calc(100vh - 2.4rem);overflow:auto;padding:1.5rem 1.7rem}
+.modal.show .sheet{animation:sheetIn .32s cubic-bezier(.2,.9,.3,1.1) both}
 .sheet h2{margin-top:0}
 .sheet .close{position:sticky;top:0;float:right;z-index:2}
-.tag{font-size:.68rem;font-weight:800;padding:.12rem .45rem;border-radius:6px;background:var(--surface2);
+.tag{font-size:.68rem;font-weight:800;padding:.14rem .5rem;border-radius:7px;background:var(--surface2);
   border:1px solid var(--line);color:var(--muted);margin-right:.3rem;white-space:nowrap;display:inline-block}
-.q{border-left:3px solid var(--brand);padding-left:.75rem;margin:.85rem 0}
+.q{border-left:3px solid var(--brand);padding:.4rem 0 .4rem .8rem;margin:.9rem 0;
+  background:linear-gradient(90deg,rgba(37,99,235,.05),transparent 60%);border-radius:0 10px 10px 0;padding-right:.6rem}
 .q .qn{font-weight:800;color:var(--ink)}
-.q .ans{font-size:.84rem;color:var(--muted);margin-top:.25rem}
+.q .ans{font-size:.84rem;color:var(--muted);margin-top:.25rem;line-height:1.55}
 .q .ans b{color:var(--ink2)}
-.fade{animation:fade .45s ease both}
+
+/* ---------------- title hero ---------------- */
+.wordmark{font-family:var(--font-display);font-size:3.1rem;line-height:1.02;font-weight:700;letter-spacing:-.025em;margin:.25rem 0;
+  background:linear-gradient(115deg,#122036 10%,#1D4ED8 58%,#0EA5E9 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.herorule{display:flex;align-items:center;gap:.7rem}
+.herorule::before,.herorule::after{content:'';height:1px;flex:1;
+  background:linear-gradient(90deg,transparent,#C7D2E3);border-radius:1px}
+.herorule::after{background:linear-gradient(90deg,#C7D2E3,transparent)}
+.featlist{list-style:none;margin:.5rem 0;padding:0}
+.feat{display:flex;gap:.7rem;align-items:flex-start;margin:.6rem 0}
+.feat .fnum{flex:none;width:1.75rem;height:1.75rem;border-radius:11px;display:grid;place-items:center;
+  font-size:.8rem;font-weight:900;color:var(--brand-d);background:linear-gradient(160deg,#F4F8FF,#E3EDFF);
+  border:1px solid #C7DCFB;box-shadow:inset 0 1px 0 #fff}
+.feat .ftxt{font-size:.93rem;color:var(--ink2);line-height:1.5;padding-top:.15rem}
+.feat .ftxt b{color:var(--ink)}
+.jpanel{border-radius:18px;padding:1.2rem 1.2rem .9rem;color:#E8EEFB;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#1B2C49,#0E1A2F);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 22px 44px -20px rgba(10,22,48,.7)}
+.jpanel::before{content:'';position:absolute;inset:0;opacity:.22;
+  background-image:radial-gradient(rgba(255,255,255,.8) 1.3px,transparent 1.4px);background-size:17px 17px}
+.jpanel>*{position:relative;z-index:1}
+.jrow{display:flex;align-items:center;gap:.7rem;padding:.32rem 0;position:relative}
+.jrow .jdisc{flex:none;width:2.4rem;height:2.4rem;border-radius:12px;display:grid;place-items:center;font-size:1.18rem;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.jrow .jt{font-weight:800;font-size:.92rem}
+.jrow .js{font-size:.68rem;color:rgba(232,238,251,.62);font-weight:600;letter-spacing:.02em}
+.jrow:not(:first-child)::before{content:'';position:absolute;left:1.18rem;top:-.34rem;width:2px;height:.68rem;
+  background:rgba(255,255,255,.18)}
+.jrow.off{opacity:.35}
+.jpanel hr.sep{border-color:rgba(255,255,255,.12)}
+
+/* ---------------- animations ---------------- */
+.fade,.rise{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
+#app>*{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
+#app>*:nth-child(2){animation-delay:.05s}#app>*:nth-child(3){animation-delay:.1s}
+#app>*:nth-child(4){animation-delay:.15s}#app>*:nth-child(5){animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeBg{from{opacity:0}to{opacity:1}}
+@keyframes sheetIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
 .pop{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both}
-@keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes pop{0%{transform:scale(.92);opacity:0}100%{transform:scale(1);opacity:1}}
 .shake{animation:shake .4s ease}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .spark{animation:spark 1.1s ease both}
-@keyframes spark{0%{box-shadow:0 0 0 0 rgba(232,163,23,.5)}100%{box-shadow:0 0 0 18px rgba(232,163,23,0)}}
+@keyframes spark{0%{box-shadow:0 0 0 0 rgba(217,161,6,.55)}100%{box-shadow:0 0 0 18px rgba(217,161,6,0)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
 @media (max-width:880px){
   .grid2,.grid2.rev{grid-template-columns:1fr}
   .prodgrid{grid-template-columns:repeat(2,1fr)}
   .optgrid3{grid-template-columns:1fr}
-  h1{font-size:1.6rem}
+  h1{font-size:1.85rem}.wordmark{font-size:2.3rem}h2{font-size:1.3rem}
+  .event::after{font-size:4rem}
 }
 @media print{
-  .topbar,.btnrow,.no-print{display:none !important}
-  body{background:#fff}
-  .modal{position:static;background:#fff;padding:0;display:block}
-  .sheet{max-height:none;box-shadow:none;padding:0}
-  .card{box-shadow:none;break-inside:avoid}
+  .topbar,.btnrow,.no-print,.tb-progress{display:none !important}
+  body{background:#fff;background-image:none}
+  .modal{position:static;background:#fff;padding:0;display:block;backdrop-filter:none}
+  .sheet{max-height:none;box-shadow:none;padding:0;animation:none}
+  .card{box-shadow:none;break-inside:avoid;border-color:#ccc}
+  #app>*{animation:none}
 }
+
 </style>
 </head>
 <body>
 <div class="vignette"></div>
 <header class="topbar" id="topbar"></header>
-<main class="wrap" id="app"></main>
+<main class="shell" id="shell">
+  <div class="railwrap">
+    <div class="pagecol" id="app"></div>
+    <aside class="taskrail" id="rail"></aside>
+  </div>
+</main>
 <div class="toast" id="toast"></div>
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <script>
@@ -377,6 +598,93 @@ const ECON = {
     if (!isFinite(L)) return { q, L: Infinity, ac: Infinity, tc: Infinity, tr: P * q, profit: -Infinity, feasible: false };
     const tc = ECON.tc(K, L) + ad;
     return { q, L, ac: tc / q, tc, tr: P * q, profit: P * q - tc, feasible: true, mr: ECON.mrFromQ(q) };
+  },
+
+  /* ============================================================
+     MONOPSONY — the firm as the only buyer of labour in the town
+     ------------------------------------------------------------
+     Until now labour came from a bottomless outside market, so the firm paid the
+     going wage $90 whatever it did: supply was perfectly elastic. As the town's
+     only employer there is no outside market to hire from, so the supply of
+     labour slopes upwards:
+
+         W(L) = LS_A + LS_B * L        L(W) = (W - LS_A) / LS_B
+
+     Calibrated so that at the employment the firm was already using in the
+     monopoly chapter (about 15.7 workers) the wage is exactly the $90 it used to
+     pay, which keeps the two chapters comparable.
+
+     Because hiring one more worker pushes up the pay of everyone already
+     employed, the marginal factor cost sits above the wage:
+
+         MFC(L) = LS_A + 2 * LS_B * L
+     ============================================================ */
+  LS_A: 35, LS_B: 3.5,
+
+  supplyWage(L) { return ECON.LS_A + ECON.LS_B * L; },
+  labourAtWage(W) { return Math.max(0, (W - ECON.LS_A) / ECON.LS_B); },
+  mfc(L) { return ECON.LS_A + 2 * ECON.LS_B * L; },
+  /* what one more worker is worth: marginal revenue on their output, less the
+     materials those units consume */
+  mrp(K, L) {
+    const q = ECON.output(K, L);
+    return (ECON.mrFromQ(q) - ECON.MAT) * ECON.mp(K, L);
+  },
+
+  /* the firm names a wage; the town decides how many people will work for it */
+  buyerState(K, W) {
+    const L = ECON.labourAtWage(W);
+    const Q = ECON.output(K, L);
+    const P = ECON.marketP(Q);
+    const TR = P * Q;
+    const tvc = W * L + ECON.MAT * Q;
+    const tc = tvc + ECON.tfc(K);
+    return {
+      W, L, Q, P, TR, tvc, tc,
+      profit: TR - tc,
+      ac: Q > 0 ? tc / Q : Infinity,
+      mfc: ECON.mfc(L),
+      mrp: ECON.mrp(K, Math.max(L, 0.5))
+    };
+  },
+
+  /* profit-maximising wage for a monopsonist, and the wage a competitive
+     labour market would settle at (where supply meets marginal revenue product) */
+  bestWage(K) {
+    let best = null;
+    for (let W = ECON.LS_A + 1; W <= 200; W += 0.25) {
+      const r = ECON.buyerState(K, W);
+      if (!(r.L > 1)) continue;
+      if (!best || r.profit > best.profit) best = r;
+    }
+    return best;
+  },
+  competitiveWage(K) {
+    let best = null;
+    for (let W = ECON.LS_A + 1; W <= 220; W += 0.25) {
+      const r = ECON.buyerState(K, W);
+      if (!(r.L > 1)) continue;
+      const gap = Math.abs(r.W - r.mrp);
+      if (!best || gap < best.gap) best = Object.assign({ gap }, r);
+    }
+    return best;
+  },
+
+  /* The value destroyed by buying labour monopsonistically: between the
+     monopsony employment and the competitive one, each worker is worth more to
+     the firm than the wage they would need to be offered. That gap is never
+     produced, and nobody receives it. Integrated numerically. */
+  monopsonyDWL(K) {
+    const best = ECON.bestWage(K), comp = ECON.competitiveWage(K);
+    if (!best || !comp || !(comp.L > best.L)) return { area: 0, from: best ? best.L : 0, to: comp ? comp.L : 0 };
+    const a = best.L, b = comp.L, n = 400;
+    let area = 0;
+    for (let i = 0; i < n; i++) {
+      const L = a + (i + 0.5) * (b - a) / n;
+      const gap = ECON.mrp(K, L) - ECON.supplyWage(L);
+      if (gap > 0) area += gap * (b - a) / n;
+    }
+    return { area, from: a, to: b, gapAtBest: ECON.mrp(K, a) - best.W };
   }
 };
 
@@ -385,6 +693,22 @@ if (typeof module !== 'undefined') module.exports = ECON;
 /* ============================================================
    MARKET FORCES — number formatting, SVG chart engine, artwork
    ============================================================ */
+
+/* ---------- the chart palette: ONE source of truth ----------
+   Every diagram in the game reads its strokes from here. Hard-coding a colour
+   anywhere else means a theme change has to be hunted down across five files. */
+const PAL = {
+  red: '#E0494D',      // marginal cost, deadweight loss, "this is a loss"
+  blue: '#2F6FE0',     // average total cost
+  green: '#0F9D74',    // average variable cost, profit, anything good
+  violet: '#7C5CFC',   // marginal revenue, average fixed cost
+  ink: '#122036',      // the point the student is standing on
+  guide: '#8595AD'     // faint vertical rules and guide lines
+};
+Object.assign(PAL, {
+  mc: PAL.red, ac: PAL.blue, avc: PAL.green, afc: PAL.violet,
+  good: PAL.green, bad: PAL.red
+});
 
 /* ---------- numbers: never show float tails ---------- */
 function fmt(x, d) { d = d == null ? 1 : d; if (!isFinite(x)) return '—'; return Number(x).toFixed(d); }
@@ -423,6 +747,29 @@ function tickLabel(v, step) { return Math.abs(step) < 1 ? fmt(v, 1) : String(Mat
      bands:[{x0,x1,color,opacity}]
    }
    ============================================================ */
+let __chartUid = 0;
+/* Monotone-light cubic spline: smooths dense series without overshooting peaks */
+function smoothPath(pts, X, Y) {
+  if (pts.length < 3) return pts.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join(' ');
+  const xs = pts.map(p => X(p[0])), ys = pts.map(p => Y(p[1]));
+  const d = ['M' + xs[0].toFixed(1) + ' ' + ys[0].toFixed(1)];
+  const slopes = [];
+  for (let i = 0; i < pts.length - 1; i++) slopes.push((ys[i + 1] - ys[i]) / Math.max(1e-6, xs[i + 1] - xs[i]));
+  const tang = new Array(pts.length);
+  tang[0] = slopes[0];
+  tang[pts.length - 1] = slopes[slopes.length - 1];
+  for (let i = 1; i < pts.length - 1; i++) {
+    const a = slopes[i - 1], b = slopes[i];
+    tang[i] = a * b <= 0 ? 0 : (a + b) / 2;
+  }
+  for (let i = 0; i < pts.length - 1; i++) {
+    const dx = xs[i + 1] - xs[i];
+    const c1x = xs[i] + dx / 3, c1y = ys[i] + tang[i] * dx / 3;
+    const c2x = xs[i + 1] - dx / 3, c2y = ys[i + 1] - tang[i + 1] * dx / 3;
+    d.push('C' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ' ' + xs[i + 1].toFixed(1) + ' ' + ys[i + 1].toFixed(1));
+  }
+  return d.join(' ');
+}
 function chart(cfg) {
   const W = cfg.w || 680, H = cfg.h || 380;
   const pad = Object.assign({ l: 64, r: 92, t: 28, b: 52 }, cfg.pad || {});
@@ -438,11 +785,24 @@ function chart(cfg) {
   const X = v => x0 + (v - cfg.x[0]) / (cfg.x[1] - cfg.x[0]) * (x1 - x0);
   const Y = v => y0 - (v - cfg.y[0]) / (cfg.y[1] - cfg.y[0]) * (y0 - y1);
   const out = [];
-  out.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>`);
+  const uid = ++__chartUid;
+  out.push(`<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="14" fill="#FFFFFF" stroke="#EDF1F8"/>`);
 
   const xt = niceTicks(cfg.x[0], cfg.x[1], cfg.xTicks || 6);
   const yt = niceTicks(cfg.y[0], cfg.y[1], cfg.yTicks || 5);
   const xs = xt.length > 1 ? xt[1] - xt[0] : 1, ys = yt.length > 1 ? yt[1] - yt[0] : 1;
+
+  // gradient defs for area fills
+  const defs = [];
+  (cfg.series || []).forEach((s, i) => {
+    if (s.area) {
+      s._gid = `mfG${uid}_${i}`;
+      defs.push(`<linearGradient id="${s._gid}" x1="0" y1="0" x2="0" y2="1">`
+        + `<stop offset="0%" stop-color="${s.color}" stop-opacity="${s.area}"/>`
+        + `<stop offset="100%" stop-color="${s.color}" stop-opacity="0.005"/></linearGradient>`);
+    }
+  });
+  if (defs.length) out.push(`<defs>${defs.join('')}</defs>`);
 
   // grid
   xt.forEach(v => out.push(`<line class="gr" x1="${X(v).toFixed(1)}" y1="${y0}" x2="${X(v).toFixed(1)}" y2="${y1}"/>`));
@@ -457,10 +817,10 @@ function chart(cfg) {
     if (s.type === 'rect') {
       const xa = Math.min(X(s.x0), X(s.x1)), wa = Math.abs(X(s.x1) - X(s.x0));
       const ya = Math.min(Y(s.y0), Y(s.y1)), ha = Math.abs(Y(s.y1) - Y(s.y0));
-      out.push(`<rect x="${xa.toFixed(1)}" y="${ya.toFixed(1)}" width="${wa.toFixed(1)}" height="${ha.toFixed(1)}" fill="${s.fill}" opacity="${s.opacity == null ? .18 : s.opacity}" stroke="${s.stroke || 'none'}" stroke-width="${s.sw || 1.4}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''}/>`);
+      out.push(`<rect x="${xa.toFixed(1)}" y="${ya.toFixed(1)}" width="${wa.toFixed(1)}" height="${ha.toFixed(1)}" rx="4" fill="${s.fill}" opacity="${s.opacity == null ? .18 : s.opacity}" stroke="${s.stroke || 'none'}" stroke-width="${s.sw || 1.4}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''}/>`);
     } else if (s.type === 'poly') {
       const p = s.pts.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');
-      out.push(`<polygon points="${p}" fill="${s.fill || 'none'}" opacity="${s.opacity == null ? .2 : s.opacity}" stroke="${s.stroke || 'none'}" stroke-width="${s.sw || 1.4}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''}/>`);
+      out.push(`<polygon points="${p}" fill="${s.fill || 'none'}" opacity="${s.opacity == null ? .2 : s.opacity}" stroke="${s.stroke || 'none'}" stroke-width="${s.sw || 1.4}" stroke-linejoin="round" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''}/>`);
     }
   });
 
@@ -471,7 +831,7 @@ function chart(cfg) {
     if (l.label) {
       const lx = l.labelSide === 'left' ? x0 + 6 : x1 - 6;
       const anch = l.labelSide === 'left' ? 'start' : 'end';
-      out.push(`<text class="cl" x="${lx}" y="${(Y(l.y) - 7).toFixed(1)}" text-anchor="${anch}" fill="${l.color}" stroke="#fff" stroke-width="3.2" paint-order="stroke">${l.label}</text>`);
+      out.push(`<text class="cl" x="${lx}" y="${(Y(l.y) - 7).toFixed(1)}" text-anchor="${anch}" fill="${l.color}" stroke="#fff" stroke-width="3.4" paint-order="stroke">${l.label}</text>`);
     }
   });
 
@@ -483,7 +843,7 @@ function chart(cfg) {
       // labels sit just above the x-axis: the top of the plot is where the curve
       // labels live, and stacking there caused collisions
       const nearRight = X(l.x) > (x0 + x1) / 2;
-      out.push(`<text class="cl" x="${(X(l.x) + (nearRight ? -7 : 7)).toFixed(1)}" y="${(y0 - 9 - i * 17).toFixed(1)}" text-anchor="${nearRight ? 'end' : 'start'}" fill="${l.color}" stroke="#fff" stroke-width="3.2" paint-order="stroke">${l.label}</text>`);
+      out.push(`<text class="cl" x="${(X(l.x) + (nearRight ? -7 : 7)).toFixed(1)}" y="${(y0 - 9 - i * 17).toFixed(1)}" text-anchor="${nearRight ? 'end' : 'start'}" fill="${l.color}" stroke="#fff" stroke-width="3.4" paint-order="stroke">${l.label}</text>`);
     }
   });
 
@@ -491,7 +851,11 @@ function chart(cfg) {
   (cfg.series || []).forEach(s => {
     const pts = s.pts.filter(p => p[0] >= cfg.x[0] - 1e-6 && p[0] <= cfg.x[1] + 1e-6 && isFinite(p[1]));
     if (!pts.length) return;
-    const d = pts.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join(' ');
+    const d = s.smooth === false ? pts.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join(' ') : smoothPath(pts, X, Y);
+    if (s.area && s._gid) {
+      const base = `L${X(pts[pts.length - 1][0]).toFixed(1)} ${y0} L${X(pts[0][0]).toFixed(1)} ${y0} Z`;
+      out.push(`<path d="${d} ${base}" fill="url(#${s._gid})" stroke="none"/>`);
+    }
     out.push(`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.width || 2.6}" stroke-linejoin="round" stroke-linecap="round" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''}/>`);
     if (s.label) {
       let lx, ly, anch = 'start';
@@ -499,102 +863,159 @@ function chart(cfg) {
       else { const last = pts[pts.length - 1]; lx = X(last[0]) + 8; ly = Y(last[1]) + 4; }
       if (s.labelAnchor) anch = s.labelAnchor;
       if (s.labelEnd && !s.labelAt) { const last = pts[pts.length - 1]; lx = X(last[0]) + 8; ly = Y(last[1]) + 4; }
-      out.push(`<text class="cl" x="${lx.toFixed(1)}" y="${(ly + (s.labelDy || 0)).toFixed(1)}" text-anchor="${anch}" fill="${s.color}" stroke="#fff" stroke-width="3.4" paint-order="stroke">${s.label}</text>`);
+      out.push(`<text class="cl" x="${lx.toFixed(1)}" y="${(ly + (s.labelDy || 0)).toFixed(1)}" text-anchor="${anch}" fill="${s.color}" stroke="#fff" stroke-width="3.6" paint-order="stroke">${s.label}</text>`);
     }
     // dots on the series
     (s.dots || []).forEach(dt => {
       const q = pts.reduce((a, b) => Math.abs(b[0] - dt) < Math.abs(a[0] - dt) ? b : a);
-      out.push(`<circle cx="${X(q[0]).toFixed(1)}" cy="${Y(q[1]).toFixed(1)}" r="4.5" fill="${s.color}" stroke="#fff" stroke-width="2"/>`);
+      out.push(`<circle cx="${X(q[0]).toFixed(1)}" cy="${Y(q[1]).toFixed(1)}" r="4.5" fill="${s.color}" stroke="#fff" stroke-width="2.2"/>`);
     });
   });
 
   // scatter points
   (cfg.points || []).forEach(p => {
     const cx = X(p.x), cy = Y(p.y);
-    out.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${p.r || 5.5}" fill="${p.color || '#0E1B2C'}" stroke="#fff" stroke-width="2.4"/>`);
+    if (p.r === 0) {
+      if (p.label) {
+        out.push(`<text class="cn" x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" text-anchor="${p.anchor || 'start'}" fill="${p.color || PAL.ink}" stroke="#fff" stroke-width="3.6" paint-order="stroke" font-style="italic">${p.label}</text>`);
+      }
+      return;
+    }
+    out.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(p.r || 5.5) + 1}" fill="#fff" opacity=".9"/>`);
+    out.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${p.r || 5.5}" fill="${p.color || PAL.ink}" stroke="#fff" stroke-width="2.4"/>`);
     if (p.label) {
       const dx = p.dx == null ? 9 : p.dx, dy = p.dy == null ? 5 : p.dy;
-      out.push(`<text class="cn" x="${(cx + dx).toFixed(1)}" y="${(cy + dy).toFixed(1)}" text-anchor="${p.anchor || 'start'}" fill="${p.color || '#0E1B2C'}" stroke="#fff" stroke-width="3.6" paint-order="stroke">${p.label}</text>`);
+      out.push(`<text class="cn" x="${(cx + dx).toFixed(1)}" y="${(cy + dy).toFixed(1)}" text-anchor="${p.anchor || 'start'}" fill="${p.color || PAL.ink}" stroke="#fff" stroke-width="3.6" paint-order="stroke">${p.label}</text>`);
     }
   });
 
-  // axes
-  out.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}"/>`);
-  out.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}"/>`);
+  // axes with arrowheads
+  out.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x1 + 6}" y2="${y0}"/>`);
+  out.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1 - 6}"/>`);
+  out.push(`<path d="M${x1 + 6} ${y0} l-7 -3.4 v6.8 Z" fill="#B9C6D9"/>`);
+  out.push(`<path d="M${x0} ${y1 - 6} l-3.4 7 h6.8 Z" fill="#B9C6D9"/>`);
   xt.forEach(v => out.push(`<text class="ct" x="${X(v).toFixed(1)}" y="${y0 + 17}" text-anchor="middle">${tickLabel(v, xs)}</text>`));
   yt.forEach(v => out.push(`<text class="ct" x="${x0 - 9}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="end">${tickLabel(v, ys)}</text>`));
   if (cfg.xLabel) out.push(`<text class="ca" x="${((x0 + x1) / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle">${cfg.xLabel}</text>`);
   if (cfg.yLabel) out.push(`<text class="ca" x="16" y="${((y0 + y1) / 2).toFixed(1)}" text-anchor="middle" transform="rotate(-90 16 ${((y0 + y1) / 2).toFixed(1)})">${cfg.yLabel}</text>`);
-  if (cfg.note) out.push(`<text class="ct" x="${x1}" y="${y1 - 8}" text-anchor="end">${cfg.note}</text>`);
+  if (cfg.note) out.push(`<text class="ct" x="${x1}" y="${y1 - 8}" text-anchor="end" font-style="italic">${cfg.note}</text>`);
   return `<svg viewBox="0 0 ${W} ${H}" role="img">${out.join('')}</svg>`;
 }
+
 
 /* ============================================================
    ARTWORK
    ============================================================ */
 
 /* ---- factory floor: fixed factors vs variable factors ---- */
+/* ---- factory floor: fixed factors vs variable factors ---- */
 function artFactory(K, L, prod, colour, opt) {
   opt = opt || {};
   const W = 680, H = 252;
+  const dark = shade(colour, -0.16);
   const o = [];
+  // workshop interior: wall + floor
   o.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>`);
-  // land
-  o.push(`<rect x="10" y="10" width="${W - 20}" height="${H - 34}" rx="12" fill="#F7FBFE" stroke="${colour}" stroke-opacity=".45" stroke-width="2" stroke-dasharray="7 5"/>`);
-  o.push(`<text class="ca" x="22" y="30" fill="${colour}">LAND &#183; rented workshop &#183; FIXED</text>`);
+  o.push(`<rect x="10" y="10" width="${W - 20}" height="${H - 34}" rx="12" fill="url(#ffWall)" stroke="${colour}" stroke-opacity=".4" stroke-width="2" stroke-dasharray="7 5"/>`);
+  o.push(`<defs><linearGradient id="ffWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FAFCFF"/><stop offset="100%" stop-color="#EFF4FA"/></linearGradient></defs>`);
+  // corner posts of the rented land
+  [[10,10],[W-10,10],[10,H-24],[W-10,H-24]].forEach(([px,py]) =>
+    o.push(`<rect x="${px-3}" y="${py-3}" width="6" height="6" rx="1.6" fill="#fff" stroke="${colour}" stroke-opacity=".55" stroke-width="1.4"/>`));
+  o.push(`<rect x="18" y="15" width="232" height="19" rx="9.5" fill="#fff" opacity=".9"/>`);
+  o.push(`<text class="ca" x="26" y="28" fill="${colour}">LAND &#183; rented workshop &#183; FIXED</text>`);
+  // floor strip + conveyor belt
+  o.push(`<rect x="14" y="194" width="${W - 28}" height="26" rx="10" fill="#E9EFF7"/>`);
+  o.push(`<rect x="26" y="203" width="${W - 52}" height="12" rx="6" fill="#E0E7F1" stroke="#C8D3E2" stroke-width="1.2"/>`);
+  for (let rx = 40; rx < W - 40; rx += 42) o.push(`<circle cx="${rx}" cy="209" r="2.4" fill="#C2CEDF"/>`);
+  // raw-material boxes travelling in
+  [[46, '#E6C08A'], [74, '#DDB277'], [102, '#E6C08A']].forEach(([bx, bc]) => {
+    o.push(`<rect x="${bx}" y="195" width="12" height="11" rx="2" fill="${bc}" stroke="#C2955A" stroke-width="1.1"/>`);
+    o.push(`<line x1="${bx}" y1="200.5" x2="${bx + 12}" y2="200.5" stroke="#C2955A" stroke-width="1"/>`);
+  });
+  // finished parcel going out (sits on the belt)
+  o.push(`<rect x="${W - 108}" y="195" width="22" height="14" rx="2.5" fill="${colour}" fill-opacity=".13" stroke="${colour}" stroke-width="1.6"/>`);
+  o.push(`<line x1="${W - 97}" y1="195" x2="${W - 97}" y2="209" stroke="${colour}" stroke-width="1.4"/>`);
+  o.push(`<path d="M ${W - 104.5} 202.2 l2.6 2.6 l5 -5.4" fill="none" stroke="${colour}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`);
+
   // machines
   const mw = 62, gap = 10;
   const mStart = 26;
-  const mTop = 58;
+  const mTop = 60;
+  o.push(`<text class="ca" x="${mStart}" y="47" fill="#64748B">CAPITAL &#183; fixed</text>`);
   for (let i = 0; i < K; i++) {
-    const x = mStart + i * (mw + gap);
-    o.push(`<rect x="${x}" y="${mTop}" width="${mw}" height="52" rx="9" fill="#EDF1F7" stroke="#A9B8CC" stroke-width="1.6"/>`);
-    o.push(`<circle cx="${x + 20}" cy="${mTop + 24}" r="11" fill="none" stroke="${colour}" stroke-width="2.4"/>`);
-    o.push(`<circle cx="${x + 20}" cy="${mTop + 24}" r="3.4" fill="${colour}"/>`);
-    o.push(`<rect x="${x + 38}" y="${mTop + 16}" width="16" height="20" rx="3" fill="#C9D4E4"/>`);
-    o.push(`<rect x="${x + 44}" y="${mTop - 8}" width="7" height="12" rx="2" fill="#A9B8CC"/>`);
-    o.push(`<text class="ct" x="${x + mw / 2}" y="${mTop + 68}" text-anchor="middle">machine ${i + 1}</text>`);
+    const x = mStart + i * (mw + gap), cx = x + mw / 2;
+    o.push(`<ellipse cx="${cx}" cy="121" rx="27" ry="5" fill="rgba(18,32,54,.09)"/>`);
+    o.push(`<rect x="${x + 11}" y="49" width="9" height="13" rx="3" fill="#D7E0EC" stroke="#B6C4D6" stroke-width="1.1"/>`);
+    o.push(`<rect x="${x}" y="${mTop}" width="${mw}" height="56" rx="11" fill="#F5F9FE" stroke="#B9C6D9" stroke-width="1.6"/>`);
+    o.push(`<rect x="${x + 2}" y="${mTop + 2}" width="${mw - 4}" height="17" rx="9" fill="#fff" opacity=".75"/>`);
+    // gear
+    const gx = x + 20, gy = mTop + 26;
+    for (let a = 0; a < 6; a++) {
+      const ang = a * Math.PI / 3, x1 = gx + Math.cos(ang) * 10.5, y1 = gy + Math.sin(ang) * 10.5,
+        x2 = gx + Math.cos(ang) * 14, y2 = gy + Math.sin(ang) * 14;
+      o.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${colour}" stroke-width="2.6" stroke-linecap="round"/>`);
+    }
+    o.push(`<circle cx="${gx}" cy="${gy}" r="10.5" fill="#fff" stroke="${colour}" stroke-width="2.6"/>`);
+    o.push(`<circle cx="${gx}" cy="${gy}" r="3.4" fill="${colour}"/>`);
+    // control screen
+    o.push(`<rect x="${x + 37}" y="${mTop + 16}" width="18" height="18" rx="4" fill="#122036"/>`);
+    o.push(`<rect x="${x + 40.5}" y="${mTop + 20.5}" width="11" height="2.6" rx="1.3" fill="${colour}" opacity=".95"/>`);
+    o.push(`<rect x="${x + 40.5}" y="${mTop + 26}" width="7" height="2.6" rx="1.3" fill="${colour}" opacity=".55"/>`);
+    // status led
+    o.push(`<circle cx="${x + 50}" cy="${mTop + 43}" r="3.4" fill="#fff"/>`);
+    o.push(`<circle cx="${x + 50}" cy="${mTop + 43}" r="2.4" fill="${colour}"/>`);
+    // name plate
+    o.push(`<rect x="${cx - 27}" y="123" width="54" height="15" rx="7.5" fill="#fff" stroke="#DCE4EF" stroke-width="1.1"/>`);
+    o.push(`<text class="ct" x="${cx}" y="133.5" text-anchor="middle" font-weight="700">machine ${i + 1}</text>`);
   }
-  o.push(`<text class="ca" x="${mStart}" y="48" fill="#6B7C96">CAPITAL &#183; fixed</text>`);
+
   // workers
   const wStart = 26 + K * (mw + gap) + 16;
   const avail = W - 22 - wStart;
   const perRow = Math.max(6, Math.min(13, L || 1));
   const cw = Math.min(34, avail / perRow);
   const r = Math.max(3.4, Math.min(7, cw * 0.24));
+  const worker = (cx, cy) => {
+    o.push(`<ellipse cx="${cx.toFixed(1)}" cy="${(cy + r * 2.2).toFixed(1)}" rx="${(r * .95).toFixed(1)}" ry="${(r * .3).toFixed(1)}" fill="rgba(18,32,54,.10)"/>`);
+    o.push(`<rect x="${(cx - r * .82).toFixed(1)}" y="${(cy + r * .08).toFixed(1)}" width="${(r * 1.64).toFixed(1)}" height="${(r * 1.5).toFixed(1)}" rx="${(r * .65).toFixed(1)}" fill="${colour}"/>`);
+    o.push(`<circle cx="${cx.toFixed(1)}" cy="${(cy + r * .14).toFixed(1)}" r="${(r * .26).toFixed(1)}" fill="#fff" opacity=".85"/>`);
+    o.push(`<circle cx="${cx.toFixed(1)}" cy="${(cy - r * .55).toFixed(1)}" r="${(r * .6).toFixed(1)}" fill="#F4CBA6"/>`);
+    o.push(`<path d="M ${(cx - r * .62).toFixed(1)} ${(cy - r * .58).toFixed(1)} A ${(r * .62).toFixed(1)} ${(r * .62).toFixed(1)} 0 0 1 ${(cx + r * .62).toFixed(1)} ${(cy - r * .58).toFixed(1)} Z" fill="${dark}"/>`);
+    o.push(`<rect x="${(cx - r * .74).toFixed(1)}" y="${(cy - r * .68).toFixed(1)}" width="${(r * 1.48).toFixed(1)}" height="${(r * .3).toFixed(1)}" rx="${(r * .15).toFixed(1)}" fill="${dark}"/>`);
+  };
   for (let i = 0; i < L; i++) {
     const row = Math.floor(i / perRow), col = i % perRow;
     const cx = wStart + cw * (col + 0.5);
-    const cy = 80 + row * 46;
-    o.push(`<circle cx="${cx.toFixed(1)}" cy="${cy}" r="${r.toFixed(1)}" fill="${colour}" stroke="#fff" stroke-width="1.2"/>`);
-    o.push(`<rect x="${(cx - r * 0.85).toFixed(1)}" y="${(cy + r * 0.9).toFixed(1)}" width="${(r * 1.7).toFixed(1)}" height="${(r * 2.1).toFixed(1)}" rx="${(r * 0.6).toFixed(1)}" fill="${colour}" opacity=".8"/>`);
+    const cy = 82 + row * 46;
+    worker(cx, cy);
   }
-  o.push(`<text class="ca" x="${W - 22}" y="48" text-anchor="end" fill="${colour}">LABOUR &#183; variable &#183; ${L} worker${L === 1 ? '' : 's'}</text>`);
+  o.push(`<text class="ca" x="${W - 22}" y="47" text-anchor="end" fill="${colour}">LABOUR &#183; variable &#183; ${L} worker${L === 1 ? '' : 's'}</text>`);
+
   // material in / output out
   const q = ECON.output(K, L);
-  o.push(`<line x1="26" y1="${H - 44}" x2="${W - 26}" y2="${H - 44}" stroke="#DDE5F0" stroke-width="2"/>`);
   o.push(`<text class="ct" x="26" y="${H - 28}">RAW MATERIALS in: $${ECON.MAT} per unit</text>`);
   o.push(`<text class="ct" x="${W - 26}" y="${H - 28}" text-anchor="end">OUTPUT: <tspan class="cn" fill="${colour}">${fmt(q, 1)} units</tspan></text>`);
   if (opt.crowd && L > 4 * K) {
-    o.push(`<text class="cl" x="${W - 26}" y="${H - 52}" text-anchor="end" fill="#C2721A" stroke="#fff" stroke-width="3.2" paint-order="stroke">crowded: too many workers per machine</text>`);
+    o.push(`<text class="cl" x="26" y="186" fill="#C97A13" stroke="#fff" stroke-width="3.4" paint-order="stroke">crowded: too many workers per machine</text>`);
   }
   if (opt.lazy && L < 4 * K) {
-    o.push(`<text class="cl" x="${W - 26}" y="${H - 52}" text-anchor="end" fill="#C2721A" stroke="#fff" stroke-width="3.2" paint-order="stroke">machines are idle: spare capacity</text>`);
+    o.push(`<text class="cl" x="26" y="186" fill="#C97A13" stroke="#fff" stroke-width="3.4" paint-order="stroke">machines are idle: spare capacity</text>`);
   }
   return `<svg viewBox="0 0 ${W} ${H}" role="img">${o.join('')}</svg>`;
 }
+
 
 /* ---- one shop front ---- */
 function shopSVG(colour, icon, name, price, opts) {
   opts = opts || {};
   const W = opts.w || 118, H = opts.h || 118;
   const o = [];
-  o.push(`<rect x="2" y="18" width="${W - 4}" height="${H - 26}" rx="10" fill="#F7F9FD" stroke="#DDE5F0" stroke-width="1.4"/>`);
+  o.push(`<rect x="2" y="18" width="${W - 4}" height="${H - 26}" rx="10" fill="#F8FAFD" stroke="#E3E9F2" stroke-width="1.4"/>`);
   o.push(`<rect x="2" y="18" width="${W - 4}" height="16" rx="8" fill="${colour}"/>`);
   o.push(`<rect x="2" y="28" width="${W - 4}" height="7" fill="${colour}"/>`);
-  o.push(`<rect x="10" y="40" width="${W - 20}" height="${H - 68}" rx="6" fill="#fff" stroke="#E1E7F1"/>`);
+  o.push(`<rect x="10" y="40" width="${W - 20}" height="${H - 68}" rx="6" fill="#fff" stroke="#E4E9F2"/>`);
   o.push(`<text x="${W / 2}" y="${H - 40}" text-anchor="middle" font-size="${opts.iconSize || 26}">${icon}</text>`);
-  if (price != null) o.push(`<rect x="${W / 2 - 20}" y="${H - 36}" width="40" height="17" rx="6" fill="#0E1B2C"/>`
+  if (price != null) o.push(`<rect x="${W / 2 - 20}" y="${H - 36}" width="40" height="17" rx="6" fill="#122036"/>`
     + `<text class="cw" x="${W / 2}" y="${H - 23}" text-anchor="middle" font-size="11">$${price}</text>`);
   if (opts.label) o.push(`<text class="ct" x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="10">${opts.label}</text>`);
   if (opts.closed) o.push(`<text x="${W / 2}" y="${H - 40}" text-anchor="middle" font-size="22" opacity=".85">&#128683;</text>`);
@@ -602,46 +1023,57 @@ function shopSVG(colour, icon, name, price, opts) {
 }
 
 /* ---- the high street: rivals wear your face (perfect competition) ---- */
+/* ---- the high street: rivals wear your face (perfect competition) ---- */
 function artStreet(prod, colour, entries, opt) {
   opt = opt || {};
-  const n = entries.length;
   const cells = entries.map(e => {
     const cls = 'shop' + (e.closed ? ' closed' : '') + (e.mine ? ' mine' : '');
     const col = e.colour || colour;
-    const bg = `linear-gradient(180deg, ${col}, ${col}dd)`;
-    return `<div class="${cls}" style="background:${bg};min-width:4.6rem">
+    return `<div class="${cls}" style="--shop:${col}">
       <span class="e">${prod.icon}</span>
-      <div style="margin-top:.15rem">${e.label || ''}</div>
-      <div style="font-size:.58rem;opacity:.85">${e.sub || ''}</div>
+      <div>${e.label || ''}</div>
+      <div>${e.sub || ''}</div>
     </div>`;
   }).join('');
-  const heading = opt.heading ? `<div class="small muted" style="margin:.15rem 0 .4rem;font-weight:700">${opt.heading}</div>` : '';
+  const heading = opt.heading ? `<div class="small muted" style="margin:.2rem 0 .5rem;font-weight:700;letter-spacing:.01em">${opt.heading}</div>` : '';
   return `${heading}<div class="shoprow">${cells}</div>`;
 }
 
+
+/* ---- demand & supply schematic used in the intro cards ---- */
 /* ---- demand & supply schematic used in the intro cards ---- */
 function artMarketDiagram(colour) {
   const o = [];
   const W = 680, H = 250;
-  o.push(`<rect width="${W}" height="${H}" fill="#fff"/>`);
   const x0 = 70, x1 = 630, y0 = 210, y1 = 30;
   const X = v => x0 + v / 100 * (x1 - x0);
   const Y = v => y0 - v / 100 * (y0 - y1);
-  o.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}"/>`);
-  o.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}"/>`);
-  o.push(`<path d="M${X(10)} ${Y(80)} L${X(90)} ${Y(22)}" stroke="#DA3A3F" stroke-width="3" fill="none"/>`);
-  o.push(`<path d="M${X(10)} ${Y(20)} L${X(90)} ${Y(82)}" stroke="#0E9F6E" stroke-width="3" fill="none"/>`);
-  o.push(`<circle cx="${X(50)}" cy="${Y(51)}" r="6" fill="#0E1B2C" stroke="#fff" stroke-width="2.4"/>`);
-  o.push(`<line x1="${x0}" y1="${Y(51)}" x2="${X(50)}" y2="${Y(51)}" stroke="#C9D4E4" stroke-dasharray="5 4"/>`);
-  o.push(`<line x1="${X(50)}" y1="${Y(51)}" x2="${X(50)}" y2="${y0}" stroke="#C9D4E4" stroke-dasharray="5 4"/>`);
-  o.push(`<text class="cl" x="${X(88)}" y="${Y(20)}" fill="#DA3A3F" stroke="#fff" stroke-width="3.2" paint-order="stroke">Demand</text>`);
-  o.push(`<text class="cl" x="${X(88)}" y="${Y(84)}" fill="#0E9F6E" stroke="#fff" stroke-width="3.2" paint-order="stroke">Supply</text>`);
-  o.push(`<text class="ct" x="${X(50)}" y="${y0 - 6}" text-anchor="middle">Q*</text>`);
-  o.push(`<text class="ct" x="${x0 - 8}" y="${Y(51) + 4}" text-anchor="end">P*</text>`);
+  o.push(`<rect width="${W}" height="${H}" rx="12" fill="#fff"/>`);
+  // consumer & producer surplus tints
+  o.push(`<polygon points="${X(10)},${Y(80)} ${X(50)},${Y(51)} ${X(10)},${Y(51)}" fill="${PAL.red}" opacity=".07"/>`);
+  o.push(`<polygon points="${X(10)},${Y(20)} ${X(50)},${Y(51)} ${X(10)},${Y(51)}" fill="${PAL.green}" opacity=".07"/>`);
+  // axes with arrows
+  o.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x1 + 8}" y2="${y0}"/>`);
+  o.push(`<line class="ax" x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1 - 8}"/>`);
+  o.push(`<path d="M${x1 + 8} ${y0} l-8 -3.6 v7.2 Z" fill="#B9C6D9"/>`);
+  o.push(`<path d="M${x0} ${y1 - 8} l-3.6 8 h7.2 Z" fill="#B9C6D9"/>`);
+  // curves (slightly bowed, drawn as quadratic beziers)
+  o.push(`<path d="M${X(10)} ${Y(80)} Q${X(48)} ${Y(56)} ${X(90)} ${Y(22)}" stroke="${PAL.red}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`);
+  o.push(`<path d="M${X(10)} ${Y(20)} Q${X(48)} ${Y(46)} ${X(90)} ${Y(82)}" stroke="${PAL.green}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`);
+  // equilibrium guides
+  o.push(`<line x1="${x0}" y1="${Y(51)}" x2="${X(50)}" y2="${Y(51)}" stroke="#C7D2E3" stroke-dasharray="5 4" stroke-width="1.6"/>`);
+  o.push(`<line x1="${X(50)}" y1="${Y(51)}" x2="${X(50)}" y2="${y0}" stroke="#C7D2E3" stroke-dasharray="5 4" stroke-width="1.6"/>`);
+  o.push(`<circle cx="${X(50)}" cy="${Y(51)}" r="10" fill="${PAL.ink}" opacity=".12"/>`);
+  o.push(`<circle cx="${X(50)}" cy="${Y(51)}" r="6" fill="${PAL.ink}" stroke="#fff" stroke-width="2.6"/>`);
+  o.push(`<text class="cl" x="${X(88)}" y="${Y(20)}" fill="${PAL.red}" stroke="#fff" stroke-width="3.6" paint-order="stroke">Demand</text>`);
+  o.push(`<text class="cl" x="${X(88)}" y="${Y(84)}" fill="${PAL.green}" stroke="#fff" stroke-width="3.6" paint-order="stroke">Supply</text>`);
+  o.push(`<text class="ct" x="${X(50)}" y="${y0 + 16}" text-anchor="middle" font-weight="800">Q*</text>`);
+  o.push(`<text class="ct" x="${x0 - 9}" y="${Y(51) + 4}" text-anchor="end" font-weight="800">P*</text>`);
   o.push(`<text class="ca" x="${(x0 + x1) / 2}" y="${H - 8}" text-anchor="middle">Quantity (units per period)</text>`);
   o.push(`<text class="ca" x="20" y="${(y0 + y1) / 2}" text-anchor="middle" transform="rotate(-90 20 ${(y0 + y1) / 2})">Price ($)</text>`);
   return `<svg viewBox="0 0 ${W} ${H}" role="img">${o.join('')}</svg>`;
 }
+
 
 /* ============================================================
    MARKET FORCES — state, router, header, setup, factory tour
@@ -680,18 +1112,25 @@ const PRODUCTS = [
     street: ['Nursery on 3rd', 'Corner Green', 'Miller Street Plants', 'Old Town Pots', 'Station Road Garden', 'The Little Glasshouse', 'Riverside Ferns', 'Northgate Nursery'] }
 ];
 
-const COLOURS = ['#1CADE4', '#F2811D', '#2E9E5B', '#E0453E', '#7A5AF8', '#0FA3A3', '#E0559B', '#E8B10A'];
+const COLOURS = ['#2563EB', '#EA7317', '#0F9D74', '#E0494D', '#7C5CFC', '#0E9AA7', '#D63384', '#D9A106'];
 
+/* The order here IS the playing order — the student meets perfect competition,
+   then monopoly (the pure opposite), then monopolistic competition (power that
+   is real but unprotected), and only then oligopoly, which needs everything
+   before it. Numbering follows the object's own order. */
 const CHAPTERS = {
   pc: { id: 'pc', n: 1, title: 'Perfect Competition', tag: 'Price taker', icon: '\uD83C\uDFEA' },
-  mc: { id: 'mc', n: 2, title: 'Monopolistic Competition', tag: 'Product differentiator', icon: '\u2728' },
-  oligo: { id: 'oligo', n: 3, title: 'Oligopoly', tag: 'Strategic rival', icon: '\u265F\uFE0F' },
-  mono: { id: 'mono', n: 4, title: 'Monopoly', tag: 'Price maker', icon: '\uD83D\uDC51' }
+  mono: { id: 'mono', n: 2, title: 'Monopoly', tag: 'Price maker', icon: '\uD83D\uDC51' },
+  mc: { id: 'mc', n: 3, title: 'Monopolistic Competition', tag: 'Product differentiator', icon: '\u2728' },
+  oligo: { id: 'oligo', n: 4, title: 'Oligopoly', tag: 'Strategic rival', icon: '\u265F\uFE0F' }
 };
+/* A mode is just the first N chapters. Listing ids per mode let the order drift
+   out of step with the chapter table; slicing one canonical list cannot. */
+const CH_ORDER = ['pc', 'mono', 'mc', 'oligo'];
 const MODES = {
-  short: { id: 'short', label: 'Quick Round', mins: '20-25 min', chs: ['pc'], note: 'Perfect Competition only, then the debrief.' },
-  std: { id: 'std', label: 'Standard', mins: '40-50 min', chs: ['pc', 'mc', 'oligo'], note: 'Competition, differentiation and rivalry.' },
-  full: { id: 'full', label: 'Full Campaign', mins: '2 lessons', chs: ['pc', 'mc', 'oligo', 'mono'], note: 'All four market structures plus a monopoly finale.' }
+  short: { id: 'short', label: 'Quick Round', mins: '20-25 min', chs: CH_ORDER.slice(0, 1), note: 'Perfect Competition only, then the debrief.' },
+  std: { id: 'std', label: 'Standard', mins: '40-50 min', chs: CH_ORDER.slice(0, 3), note: 'Competition, market power, then product differentiation.' },
+  full: { id: 'full', label: 'Full Campaign', mins: '2 lessons', chs: CH_ORDER.slice(0, 4), note: 'All four market structures, ending in a strategic duel.' }
 };
 
 const S = {
@@ -706,6 +1145,9 @@ const S = {
   dec: {}, checkAns: null, pick: null, locked: false,
   oligo: { round: 0, mine: [], rival: [], collude: false, fine: 0, rivalP: 'H' },
   mono: { stage: 0, K: 3, P: 42 },
+  /* the side task rail: open/closed, whether the student pinned it by hand, and
+     which sections they have already been shown */
+  rail: { open: true, pinned: false, key: '', seen: {} },
   showGuide: true
 };
 
@@ -736,7 +1178,7 @@ function lum(hex) {
   const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
-function onColour(hex) { return lum(hex) > 0.62 ? '#0E1B2C' : '#FFFFFF'; }
+function onColour(hex) { return lum(hex) > 0.62 ? '#122036' : '#FFFFFF'; }
 function toast(msg) {
   const t = q('#toast'); t.innerHTML = msg; t.classList.add('show');
   clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600);
@@ -752,6 +1194,7 @@ function addValue(n) { S.value += n; S.cash += n; paintTop(); }
 function logRun(ch, label, profit) { S.log.push({ ch, label, profit }); }
 
 /* ---------------- top bar ---------------- */
+/* ---------------- top bar ---------------- */
 function topbarHTML() {
   const p = prod();
   const stepDots = S.chs.map(id => {
@@ -759,8 +1202,10 @@ function topbarHTML() {
     const st = S.chs.indexOf(id) < S.chIdx ? 'done' : (S.chs.indexOf(id) === S.chIdx ? 'on' : '');
     return `<span class="stepdot ${st}">${c.n}. ${c.title}</span>`;
   }).join('');
+  const prog = S.chs.length
+    ? `<div class="tb-progress"><i style="width:${Math.round(Math.min(1, S.chIdx / S.chs.length) * 100)}%"></i></div>` : '';
   return `<div class="tb-firm">
-      <span class="chip" style="background:${S.colour};color:${onColour(S.colour)}">${S.product ? p.icon : '\uD83C\uDFE2'}</span>
+      <span class="chip" style="background:linear-gradient(150deg,${S.colour},${shade(S.colour,-0.2)});color:${onColour(S.colour)}">${S.product ? p.icon : '\uD83C\uDFE2'}</span>
       <span class="tb-name">${esc(S.firmName || 'Your Firm')}</span>
     </div>
     <div class="tb-stats">
@@ -774,11 +1219,19 @@ function topbarHTML() {
       </div>
       ${S.showGuide ? `<button class="iconbtn" data-a="guide">\uD83D\uDCD8 Teacher</button>` : ''}
       ${S.scene !== 'title' ? `<button class="iconbtn" data-a="restart" title="Start again">\u21BB</button>` : ''}
-    </div>`;
+    </div>${prog}`;
 }
 function paintTop() { q('#topbar').innerHTML = topbarHTML(); }
 
+
 /* ---------------- router ---------------- */
+/* ---------------- router ---------------- */
+function paintRanges(root) {
+  qa('input[type=range]', root || document).forEach(el => {
+    const mn = +el.min || 0, mx = (+el.max || 100), v = +el.value;
+    el.style.setProperty('--pct', Math.max(0, Math.min(100, (v - mn) / (mx - mn) * 100)) + '%');
+  });
+}
 function go(id) {
   S.scene = id;
   const sc = SCENES[id];
@@ -786,12 +1239,16 @@ function go(id) {
   paintTop();
   q('#app').innerHTML = sc.html();
   if (sc.mount) sc.mount();
+  paintRanges();
+  railSync();
   try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { }
 }
 function repaint() {
   const sc = SCENES[S.scene];
   q('#app').innerHTML = sc.html();
   if (sc.mount) sc.mount();
+  paintRanges();
+  railSync();
 }
 function bindGlobals() {
   document.addEventListener('click', e => {
@@ -802,12 +1259,14 @@ function bindGlobals() {
   });
   document.addEventListener('input', e => {
     const t = e.target.closest('[data-i]');
+    if (t && t.type === 'range') paintRanges(t.parentElement || document);
     if (!t) return;
     const fn = ACTS[t.dataset.i];
     if (fn) fn(t, e);
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 }
+
 
 /* ============================================================
    SCENE: title
@@ -818,53 +1277,54 @@ SCENES.title = {
       <button class="opt ${S.mode === m.id ? 'sel' : ''}" data-a="mode" data-v="${m.id}">
         ${m.label}<small>${m.mins} &middot; ${m.chs.length} market${m.chs.length > 1 ? 's' : ''}</small>
       </button>`).join('');
+    const journey = Object.values(CHAPTERS).map(c => {
+      const on = MODES[S.mode].chs.indexOf(c.id) >= 0;
+      return `<div class="jrow ${on ? '' : 'off'}">
+        <span class="jdisc">${c.icon}</span>
+        <span><span class="jt">${c.n}. ${c.title}</span><span class="js" style="display:block">${c.tag}</span></span>
+      </div>`;
+    }).join('');
     return `
-    <div class="card pop" style="padding:1.6rem 1.5rem">
-      <div class="kicker">Economics Role Play &middot; Market Structure</div>
-      <h1>MARKET FORCES</h1>
-      <div class="lead" style="font-size:1.12rem;max-width:52rem">
+    <div class="card pop" style="padding:1.8rem 1.7rem">
+      <div class="herorule"><span class="kicker">Economics Role Play &middot; Market Structure</span></div>
+      <h1 class="wordmark">MARKET FORCES</h1>
+      <div class="lead" style="font-size:1.12rem;max-width:54rem">
         You are about to become the owner of a small manufacturing firm.
         You will hire workers, buy raw materials, set a price &mdash; and live with the consequences.
       </div>
-      <div class="grid2" style="margin-top:1rem">
+      <div class="grid2" style="margin-top:1.1rem">
         <div>
           <h3>What you will do</h3>
-          <ul class="clean">
-            <li><b>Build your firm</b> &mdash; choose the product, the brand and the colour.</li>
-            <li><b>Run the factory</b> &mdash; discover your production function and cost curves.</li>
-            <li><b>Trade in four markets</b> &mdash; from a price taker in perfect competition to a price-making monopolist.</li>
-            <li><b>Face the events</b> &mdash; new entrants, imitators, a rival's price cut, a regulator at your door.</li>
-          </ul>
+          <div class="featlist">
+            <div class="feat"><span class="fnum">1</span><span class="ftxt"><b>Build your firm</b> &mdash; choose the product, the brand and the colour.</span></div>
+            <div class="feat"><span class="fnum">2</span><span class="ftxt"><b>Run the factory</b> &mdash; discover your production function and cost curves.</span></div>
+            <div class="feat"><span class="fnum">3</span><span class="ftxt"><b>Trade in four markets</b> &mdash; from a price taker in perfect competition to a price-making monopolist.</span></div>
+            <div class="feat"><span class="fnum">4</span><span class="ftxt"><b>Face the events</b> &mdash; new entrants, imitators, a rival's price cut, a regulator at your door.</span></div>
+          </div>
           <h3>How you are judged</h3>
-          <ul class="clean">
-            <li><b>Firm value</b> &mdash; your accumulated economic profit, in dollars.</li>
-            <li><b>Insight</b> &mdash; points for spotting the economics behind what happened.</li>
-          </ul>
+          <div class="tiles" style="grid-template-columns:1fr 1fr">
+            <div class="tile hi"><div class="tl">Firm value</div><div class="ts" style="margin-top:.2rem">your accumulated economic profit, in dollars</div></div>
+            <div class="tile"><div class="tl">Insight</div><div class="ts" style="margin-top:.2rem">points for spotting the economics behind what happened</div></div>
+          </div>
           <h3>Choose a length</h3>
           <div class="optgrid3">${modeCards}</div>
-          <div class="small muted" style="margin-top:.2rem">${MODES[S.mode].note}</div>
+          <div class="small muted" style="margin-top:.3rem">${MODES[S.mode].note}</div>
         </div>
         <div>
-          <div class="preview" style="background:linear-gradient(135deg,#1CADE4,#0B6E9E);min-height:12rem">
-            <div class="pv-in">
-              <div class="tagline">Your journey</div>
-              <div class="pv-em" style="margin-top:.5rem">\uD83C\uDFEA</div>
-              <div class="pv-nm">Many sellers, one price</div>
-              <div class="small" style="opacity:.92;margin-top:.5rem">Perfect competition</div>
-              <hr class="sep" style="opacity:.3;margin:.8rem 0">
-              <div class="pv-em">\u2728</div>
-              <div class="pv-nm">Your own version</div>
-              <div class="small" style="opacity:.92">Monopolistic competition</div>
-            </div>
+          <div class="jpanel">
+            <div class="tagline">Your journey</div>
+            <div style="height:.55rem"></div>
+            ${journey}
           </div>
-          <div class="btnrow right"><button class="btn primary big" data-a="start">Start \u2192</button></div>
+          <div class="btnrow right"><button class="btn primary big" data-a="start">Start your firm &rarr;</button></div>
           <div class="small muted" style="text-align:right;margin-top:.3rem">Single player. Progress is not saved after you close the tab.</div>
         </div>
       </div>
     </div>`;
   }
 };
-ACTS.mode = t => { S.mode = t.dataset.v; repaint(); };
+ACTS.mode = t =>
+ { S.mode = t.dataset.v; repaint(); };
 ACTS.start = () => { S.chs = MODES[S.mode].chs.slice(); go('setup'); };
 ACTS.fs = t => {
   S.fs = t.dataset.v;
@@ -996,11 +1456,11 @@ SCENES.tour = {
           <div class="small muted">Together these are your <b>total variable cost (TVC)</b>.</div>
         </div>
         <div>
-          <div class="card tight" style="background:var(--surface2)">
+          <div class="card tight" data-note="flat">
             <div class="small" style="font-weight:800">In the short run</div>
             <div class="small muted">You cannot change the workshop or the machines &mdash; those are your <b>fixed</b> factors. The only thing you can really change, day to day, is <b>how many workers you hire</b>. That single choice decides your output, your costs &mdash; and your profit.</div>
           </div>
-          <div class="card tight" style="background:#FFF9E8;border-color:#F0E0B8">
+          <div class="card tight" data-note="amber">
             <div class="small" style="font-weight:800">Your task before you meet the market</div>
             <div class="small">Head into the factory and find out three things:</div>
             <ol class="clean small" style="margin-left:1rem">
@@ -1049,21 +1509,21 @@ function cfgPCFirm(w, o) {
     }
     if (pts.length) ser.push({ pts, color, width: 2.8, label });
   };
-  mk(ECON.mc, '#DA3A3F', 'MC');
-  mk(ECON.ac, '#1C6FD4', 'AC');
-  if (o.showAVC !== false) mk(ECON.avc, '#0E9F6E', 'AVC');
-  if (o.showAFC) mk(ECON.afc, '#8B5CF6', 'AFC');
+  mk(ECON.mc, PAL.red, 'MC');
+  mk(ECON.ac, PAL.blue, 'AC');
+  if (o.showAVC !== false) mk(ECON.avc, PAL.green, 'AVC');
+  if (o.showAFC) mk(ECON.afc, PAL.violet, 'AFC');
 
   const Q = ECON.output(K, L), AC = ECON.ac(K, L);
   const profit = ECON.profit(K, L, P);
   const shapes = [], points = [], vlines = [], hlines = [];
-  hlines.push({ y: P, color: '#0E1B2C', dash: '7 5', label: `P = MR = AR = $${fmt(P, 0)}`, labelSide: 'left' });
+  hlines.push({ y: P, color: PAL.ink, dash: '7 5', label: `P = MR = AR = $${fmt(P, 0)}`, labelSide: 'left' });
 
   if (o.showProfit !== false && L > 0 && Q > 0) {
     const top = Math.max(AC, P), bot = Math.min(AC, P);
-    shapes.push({ type: 'rect', x0: 0, y0: top, x1: Q, y1: bot, fill: profit >= 0 ? '#0E9F6E' : '#DA3A3F', opacity: .17, stroke: profit >= 0 ? '#0E9F6E' : '#DA3A3F', sw: 1.5, dash: '4 3' });
-    vlines.push({ x: Q, color: '#93A2B8', label: `Q = ${fmt(Q, 1)}` });
-    points.push({ x: Q / 2, y: (AC + P) / 2, color: profit >= 0 ? '#0E9F6E' : '#DA3A3F', r: 0, label: profit >= 0 ? 'profit box' : 'loss box', dx: -4, anchor: 'middle' });
+    shapes.push({ type: 'rect', x0: 0, y0: top, x1: Q, y1: bot, fill: profit >= 0 ? PAL.green : PAL.red, opacity: .17, stroke: profit >= 0 ? PAL.green : PAL.red, sw: 1.5, dash: '4 3' });
+    vlines.push({ x: Q, color: PAL.guide, label: `Q = ${fmt(Q, 1)}` });
+    points.push({ x: Q / 2, y: (AC + P) / 2, color: profit >= 0 ? PAL.green : PAL.red, r: 0, label: profit >= 0 ? 'profit box' : 'loss box', dx: -4, anchor: 'middle' });
   }
   return {
     w, h: Math.round(Math.min(500, Math.max(310, w * 0.46))),
@@ -1110,6 +1570,7 @@ function softLabUpdate() {
   if (d) { d.innerHTML = LABVIEW[S.lab.tab].dyn(); drawViews(); }
   const cl = q('#ctlL'); if (cl) cl.textContent = S.lab.L + (S.lab.L === 1 ? ' worker' : ' workers');
   const cp = q('#ctlP'); if (cp) cp.textContent = '$' + fmt(S.lab.P, 0);
+  railSync();
 }
 
 /* ---------------- tab 1: production ---------------- */
@@ -1138,8 +1599,8 @@ LABVIEW.production = {
       if (ECON.mp(K, l) > mpMax) { mpMax = ECON.mp(K, l); mpL = l; }
       if (ECON.ap(K, l) > apMax) { apMax = ECON.ap(K, l); apL = l; }
     }
-    const m1 = missionRow('p_mp', 'Set workers so that <b>marginal product is at its maximum</b>.', 'Watch the MP column as you add workers.', S.lab.missions['p_mp']);
-    const m2 = missionRow('p_ap', 'Set workers so that <b>average product is at its maximum</b>.', 'That is exactly where AP = MP.', S.lab.missions['p_ap']);
+    const m1 = missionRow('p_mp');
+    const m2 = missionRow('p_ap');
     const overCrowd = L > 4 * K;
     return `
     <div class="grid2">
@@ -1215,8 +1676,8 @@ LABVIEW.costs = {
       <div>
         <div class="card">
           <h3 style="margin-top:0">Mission 2 &middot; Map the cost curves</h3>
-          ${missionRow('c_minac', 'Set workers to the level that <b>minimises average total cost</b>.', 'Follow the AC column down, then up again.', S.lab.missions['c_minac'])}
-          ${missionRow('c_shut', 'Set workers to the level that <b>minimises average variable cost</b>.', 'The AC curve is still falling here \u2014 that is the AFC at work.', S.lab.missions['c_shut'])}
+          ${missionRow('c_minac')}
+          ${missionRow('c_shut')}
           <div class="btnrow"><button class="btn wide" data-a="lab-check-cost">Check my answers</button></div>
         </div>
       </div>
@@ -1282,7 +1743,7 @@ LABVIEW.profit = {
           <div class="tile ${profit >= 0 ? 'pos' : 'neg'}"><div class="tl">Economic profit</div><div class="tv">${money(profit)}</div><div class="ts">TR \u2212 TC</div></div>
           <div class="tile ${L && MC > P ? 'warn' : ''}"><div class="tl">MC</div><div class="tv">${L ? money(MC, 2) : '\u2014'}</div><div class="ts">${L ? (MC > P ? 'above price: too much output' : 'below price: produce more') : 'not producing'}</div></div>
         </div>
-        <div class="card tight" style="background:#F0FAFF;border-color:#BCE6F8">
+        <div class="card tight" data-note="blue">
           <div class="small" style="font-weight:800">The rule you just discovered</div>
           <div class="small">Produce up to the point where <b>MC = MR</b>. In perfect competition the price <i>is</i> marginal revenue, so the rule becomes <b>MC = P</b>. Then check one thing: does the price at least cover average variable cost? If not, shut down and lose only your fixed cost.</div>
         </div>
@@ -1290,9 +1751,9 @@ LABVIEW.profit = {
       <div>
         <div class="card">
           <h3 style="margin-top:0">Mission 3 &middot; Find the rule</h3>
-          ${missionRow('f_p40', 'Set the price to <b>$40</b>, then find the output that maximises profit.', 'Keep the price at 40 and move the workers slider.', S.lab.missions['f_p40'])}
-          ${missionRow('f_p24', 'Set the price to <b>$24</b>. Should you keep producing?', 'Compare $24 with your minimum average variable cost.', S.lab.missions['f_p24'])}
-          ${missionRow('f_p16', 'Set the price to <b>$16</b>. What is the right decision now?', 'Compare what you lose by producing with what you lose by stopping.', S.lab.missions['f_p16'])}
+          ${missionRow('f_p40')}
+          ${missionRow('f_p24')}
+          ${missionRow('f_p16')}
           <div class="btnrow"><button class="btn wide" data-a="lab-check-profit">Check my answers</button></div>
         </div>
         <div class="card tight">
@@ -1307,10 +1768,17 @@ LABVIEW.profit = {
   }
 };
 
-function missionRow(id, text, hint, done) {
+/* The mission cards read the same registry as the side rail and the gate, so the
+   three can never tell the student different things. */
+function missionRow(id) {
+  const t = LAB_TASKS.filter(x => x.id === id)[0];
+  const done = t.ok(), armed = !done && t.met();
+  const pill = done ? '\u2713 done' : armed ? 'ready' : '+' + t.reward;
+  const cls = done ? 'g' : armed ? 'amber' : 'coin';
+  const note = done && t.why ? t.why() : t.hint;
   return `<div style="display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;border-bottom:1px dashed var(--line)">
-    <span class="pill ${done ? 'g' : ''}" style="min-width:3.9rem;text-align:center">${done ? '\u2713 done' : '+10'}</span>
-    <div class="small" style="flex:1"><div>${text}</div><div class="muted tiny">${hint}</div></div>
+    <span class="pill ${cls}" style="min-width:3.9rem;text-align:center">${pill}</span>
+    <div class="small" style="flex:1"><div>${t.label}</div><div class="muted tiny">${note}</div></div>
   </div>`;
 }
 
@@ -1326,9 +1794,9 @@ VIEWS['lab-tp'] = w => {
   return chart({
     w, h: Math.round(Math.min(430, Math.max(270, w * 0.42))), x: [0, 14], y: [0, Math.ceil(ECON.V * K * 1.05)],
     xLabel: 'Workers hired', yLabel: 'Total product Q',
-    series: [{ pts, color: S.colour, width: 3.2, label: 'Total product' }],
-    points: [{ x: S.lab.L, y: ECON.output(K, S.lab.L), color: '#0E1B2C', r: 6, label: `L=${S.lab.L} \u2192 Q=${fmt(ECON.output(K, S.lab.L), 1)}`, dy: -12, anchor: 'middle', dx: 0 }],
-    vlines: S.lab.L ? [{ x: S.lab.L, color: '#93A2B8' }] : []
+    series: [{ pts, color: S.colour, width: 3.2, label: 'Total product', area: .14 }],
+    points: [{ x: S.lab.L, y: ECON.output(K, S.lab.L), color: PAL.ink, r: 6, label: `L=${S.lab.L} \u2192 Q=${fmt(ECON.output(K, S.lab.L), 1)}`, dy: -12, anchor: 'middle', dx: 0 }],
+    vlines: S.lab.L ? [{ x: S.lab.L, color: PAL.guide }] : []
   });
 };
 VIEWS['lab-mp'] = w => {
@@ -1339,10 +1807,10 @@ VIEWS['lab-mp'] = w => {
     w, h: Math.round(Math.min(430, Math.max(270, w * 0.42))), x: [0, 14], y: [0, Math.max(6, Math.ceil(ECON.V * K / 5))],
     xLabel: 'Workers hired', yLabel: 'Product per worker',
     series: [
-      { pts: ap, color: '#0E9F6E', width: 3, label: 'AP' },
-      { pts: mp, color: '#DA3A3F', width: 3, label: 'MP' }
+      { pts: ap, color: PAL.green, width: 3, label: 'AP' },
+      { pts: mp, color: PAL.red, width: 3, label: 'MP' }
     ],
-    points: (S.lab.L ? [{ x: S.lab.L, y: ECON.mp(K, S.lab.L), color: '#DA3A3F', r: 5.5 }, { x: S.lab.L, y: ECON.ap(K, S.lab.L), color: '#0E9F6E', r: 5.5 }] : []),
+    points: (S.lab.L ? [{ x: S.lab.L, y: ECON.mp(K, S.lab.L), color: PAL.red, r: 5.5 }, { x: S.lab.L, y: ECON.ap(K, S.lab.L), color: PAL.green, r: 5.5 }] : []),
     note: 'MP cuts AP at AP\u2019s peak'
   });
 };
@@ -1354,10 +1822,10 @@ VIEWS['lab-costs'] = w => {
     for (let l = 1; l <= 14; l++) { const x = ECON.output(K, l), y = fn(K, l); if (y <= yMax) pts.push([x, y]); }
     ser.push({ pts, color, width: 3, label });
   };
-  add(ECON.mc, '#DA3A3F', 'MC');
-  add(ECON.ac, '#1C6FD4', 'AC');
-  add(ECON.avc, '#0E9F6E', 'AVC');
-  add(ECON.afc, '#8B5CF6', 'AFC');
+  add(ECON.mc, PAL.red, 'MC');
+  add(ECON.ac, PAL.blue, 'AC');
+  add(ECON.avc, PAL.green, 'AVC');
+  add(ECON.afc, PAL.violet, 'AFC');
   let minAcL = 1, minAc = Infinity;
   for (let l = 1; l <= 14; l++) if (ECON.ac(K, l) < minAc) { minAc = ECON.ac(K, l); minAcL = l; }
   const Q = ECON.output(K, S.lab.L);
@@ -1366,8 +1834,8 @@ VIEWS['lab-costs'] = w => {
     x: [0, ECON.V * K * 0.95], y: [0, yMax],
     xLabel: 'Output Q (units per period)', yLabel: 'Cost per unit ($)',
     series: ser,
-    points: [{ x: ECON.output(K, minAcL), y: minAc, color: '#0E1B2C', r: 5.5, label: `lowest AC = ${money(minAc, 2)}`, dy: -11, anchor: 'middle', dx: 0 }],
-    vlines: S.lab.L ? [{ x: Q, color: '#93A2B8', label: `you: Q=${fmt(Q, 1)}` }] : []
+    points: [{ x: ECON.output(K, minAcL), y: minAc, color: PAL.ink, r: 5.5, label: `lowest AC = ${money(minAc, 2)}`, dy: -11, anchor: 'middle', dx: 0 }],
+    vlines: S.lab.L ? [{ x: Q, color: PAL.guide, label: `you: Q=${fmt(Q, 1)}` }] : []
   });
 };
 VIEWS['lab-profit'] = w => chart(cfgPCFirm(w, { K: S.lab.K, P: S.lab.P, L: S.lab.L, showProfit: true }));
@@ -1377,41 +1845,30 @@ ACTS['lab-l'] = t => { S.lab.L = +t.value; softLabUpdate(); };
 ACTS['lab-p'] = t => { S.lab.P = +t.value; softLabUpdate(); };
 ACTS['lab-k'] = t => { S.lab.K = +t.dataset.v; repaint(); };
 
-ACTS['lab-check-prod'] = () => {
-  const K = S.lab.K;
-  let mpL = 1, mpMax = -Infinity, apL = 1, apMax = -Infinity;
-  for (let l = 1; l <= 12; l++) {
-    if (ECON.mp(K, l) > mpMax) { mpMax = ECON.mp(K, l); mpL = l; }
-    if (ECON.ap(K, l) > apMax) { apMax = ECON.ap(K, l); apL = l; }
-  }
+/* ---- banking a task is the only way to earn lab insight, and the only way to
+   open the gate. Both read the same registry, so they cannot disagree. ---- */
+function bankLab(ids, okMsg, missMsg) {
   let got = 0;
-  if (S.lab.L === mpL && !S.lab.missions['p_mp']) { S.lab.missions['p_mp'] = 1; got += 10; }
-  if (S.lab.L === apL && !S.lab.missions['p_ap']) { S.lab.missions['p_ap'] = 1; got += 10; }
-  if (got) { S.insight += got; toast(`+${got} Insight \u00b7 production function cracked`); }
-  else toast('Not quite \u2014 move the slider and watch how MP and AP behave.');
+  ids.forEach(id => {
+    const t = LAB_TASKS.filter(x => x.id === id)[0];
+    if (t.met() && !S.lab.missions[id]) got += awardLabTask(id);
+  });
+  if (got) toast(`+${got} Insight \u00b7 ` + okMsg);
+  else toast(missMsg);
   softLabUpdate(); paintTop();
-};
-ACTS['lab-check-cost'] = () => {
-  const K = S.lab.K;
-  let minAcL = 1, minAc = Infinity, minAvcL = 1, minAvc = Infinity;
-  for (let l = 1; l <= 14; l++) {
-    if (ECON.ac(K, l) < minAc) { minAc = ECON.ac(K, l); minAcL = l; }
-    if (ECON.avc(K, l) < minAvc) { minAvc = ECON.avc(K, l); minAvcL = l; }
-  }
-  let got = 0;
-  if (S.lab.L === minAcL && !S.lab.missions['c_minac']) { S.lab.missions['c_minac'] = 1; got += 10; }
-  if (S.lab.L === minAvcL && !S.lab.missions['c_shut']) { S.lab.missions['c_shut'] = 1; got += 10; }
-  if (got) { S.insight += got; toast(`+${got} Insight \u00b7 cost curves mapped`); }
-  else toast('Not yet \u2014 find the lowest point of the AC curve, then of the AVC curve.');
-  softLabUpdate(); paintTop();
-};
+}
+
+ACTS['lab-check-prod'] = () => bankLab(['p_mp', 'p_ap'], 'production function cracked',
+  'Not quite \u2014 move the slider and watch how MP and AP behave.');
+ACTS['lab-check-cost'] = () => bankLab(['c_minac', 'c_shut'], 'cost curves mapped',
+  'Not yet \u2014 find the lowest point of the AC curve, then of the AVC curve.');
 ACTS['lab-check-profit'] = () => {
   let got = 0;
-  const best40 = ECON.bestL(S.lab.K, 40);
-  if (S.lab.P === 40 && S.lab.L === best40.L && !S.lab.missions['f_p40']) { S.lab.missions['f_p40'] = 1; got += 10; }
-  if (S.lab.P === 24 && S.lab.L > 0 && !S.lab.missions['f_p24']) { S.lab.missions['f_p24'] = 1; got += 10; }
-  if (S.lab.P === 16 && S.lab.L === 0 && !S.lab.missions['f_p16']) { S.lab.missions['f_p16'] = 1; got += 10; }
-  if (got) { S.insight += got; toast(`+${got} Insight \u00b7 the profit rule is yours`); }
+  ['f_p40', 'f_p24', 'f_p16'].forEach(id => {
+    const t = LAB_TASKS.filter(x => x.id === id)[0];
+    if (t.met() && !S.lab.missions[id]) got += awardLabTask(id);
+  });
+  if (got) toast(`+${got} Insight \u00b7 the profit rule is yours`);
   else if (S.lab.P === 40) toast('At $40 keep adding workers until profit stops rising \u2014 MC should be near $40.');
   else if (S.lab.P === 24) toast('At $24 the price still covers average variable cost, so keep producing.');
   else if (S.lab.P === 16) toast('At $16 the price is below average variable cost \u2014 every unit adds to your loss.');
@@ -1419,9 +1876,12 @@ ACTS['lab-check-profit'] = () => {
   softLabUpdate(); paintTop();
 };
 ACTS['lab-finish'] = () => {
-  if (!S.lab.missions['f_p40']) {
-    toast('Complete Mission 3 at $40 first \u2014 then you are ready to trade.');
-    S.lab.tab = 'profit'; repaint(); return;
+  if (gateOpen()) {
+    const miss = gateMissing()[0];
+    if (miss && miss.group) S.lab.tab = miss.group;
+    toast(gateMessage());
+    repaint();
+    return;
   }
   S.K = S.lab.K; S.L = S.lab.L;
   S.chIdx = 0; S.beat = 0;
@@ -1430,8 +1890,9 @@ ACTS['lab-finish'] = () => {
 };
 
 /* ============================================================
-   MARKET FORCES — chapter engine + Chapter 1 (Perfect Competition)
-   and Chapter 2 (Monopolistic Competition)
+   MARKET FORCES — chapter engine + Chapter 1 (Perfect Competition),
+   plus the shared monopolistic-competition firm diagram.
+   Playing order lives in CHAPTERS (03_ui.js): pc → mono → mc → oligo.
    ============================================================ */
 
 const BEATS = {};
@@ -1452,6 +1913,8 @@ function enterBeat() {
   if (b.onEnter) b.onEnter();
 }
 function advance() {
+  /* one gate for the whole game: a step is finished when its task list says so */
+  if (gateOpen()) { toast(gateMessage()); return; }
   S.beat++;
   if (S.beat >= curBeats().length) {
     S.chIdx++;
@@ -1470,7 +1933,7 @@ SCENES.chapter = {
     return `
     <div class="card tight" style="display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:.6rem">
-        <span style="font-size:1.5rem">${ch.icon}</span>
+        <span class="ch-icon">${ch.icon}</span>
         <div><div class="kicker">Chapter ${ch.n} of ${S.chs.length} &middot; ${ch.tag}</div><h2 style="margin:0">${ch.title}</h2></div>
       </div>
       <div class="steps" style="margin:0">${dots}</div>
@@ -1501,6 +1964,7 @@ function bindDecisionInputs() {
 }
 
 /* ---------------- beat renderers ---------------- */
+function beatTitle(b){ return typeof b.title === "function" ? b.title() : b.title; }
 function beatIntro(b) {
   const ch = chapter();
   const chs = typeof b.choices === 'function' ? b.choices() : b.choices;
@@ -1509,16 +1973,15 @@ function beatIntro(b) {
   const bullets = (b.bullets || []).length
     ? `<ul class="clean">${b.bullets.map(x => `<li>${x}</li>`).join('')}</ul>` : '';
   const art = b.art ? `<div class="chartcard" style="max-width:900px;margin-left:auto;margin-right:auto">${typeof b.art === 'function' ? b.art() : b.art}</div>` : '';
-  const disabled = (chs && S.pick == null) ? 'disabled' : '';
   return `
   <div class="card fade">
     <div class="kicker">${b.kicker || ('Chapter ' + ch.n)}</div>
-    <h2>${b.title}</h2>
+    <h2>${beatTitle(b)}</h2>
     ${(b.paras || []).map(p => `<div class="narr">${p}</div>`).join('')}
     ${art}
     ${choices}
     ${bullets ? `<div class="grid2" style="margin-top:.3rem"><div>${bullets}</div><div></div></div>` : ''}
-    <div class="btnrow right"><button class="btn primary big" data-a="next" ${disabled}>${b.btn || 'Continue \u2192'}</button></div>
+    <div class="btnrow right"><button class="btn primary big" data-a="next">${b.btn || 'Continue \u2192'}</button></div>
     ${(chs && S.pick == null) ? '<div class="small muted" style="text-align:right">Make your choice to continue.</div>' : ''}
   </div>`;
 }
@@ -1530,7 +1993,7 @@ function beatEvent(b) {
   return `
   <div class="card event ${b.cls || ''} fade">
     <div><span class="evt-tag ${b.cls || ''}">${b.tag || 'Market event'}</span></div>
-    <h2 style="margin-top:.5rem">${b.title}</h2>
+    <h2 style="margin-top:.5rem">${beatTitle(b)}</h2>
     ${(b.paras || []).map(p => `<div class="narr">${p}</div>`).join('')}
     ${chg}
     ${b.street ? (typeof b.street === 'function' ? b.street() : b.street) : ''}
@@ -1544,17 +2007,17 @@ function beatCheck(b) {
   const opts = b.opts.map((o, i) => {
     let cls = '';
     if (answered) { if (o.ok) cls = 'ok'; else if (i === S.checkAns) cls = 'no'; }
-    return `<button class="checkopt ${cls}" data-a="check-ans" data-v="${i}">${o.t}</button>`;
+    return `<button class="checkopt ${cls}" data-a="check-ans" data-v="${i}"><span class="optkey">${'ABCDE'[i]}</span><span>${o.t}</span></button>`;
   }).join('');
   const a = answered ? b.opts[S.checkAns] : null;
   return `
   <div class="card fade">
     <div class="kicker">Check your thinking &middot; +${b.ins || 10} Insight</div>
-    <h2>${b.title || 'Think it through'}</h2>
+    <h2>${beatTitle(b) || 'Think it through'}</h2>
     <div class="narr">${b.q}</div>
     ${opts}
     <div class="fb ${answered ? 'show ' + (a.ok ? 'ok' : 'no') : ''}">${answered ? (a.ok ? '<b>Correct.</b> ' : '<b>Not quite.</b> ') + a.fb : ''}</div>
-    <div class="btnrow right"><button class="btn primary big" data-a="next" ${answered ? '' : 'disabled'}>${answered ? 'Continue \u2192' : 'Choose an answer'}</button></div>
+    <div class="btnrow right"><button class="btn primary big" data-a="next">${answered ? 'Continue \u2192' : 'Choose an answer'}</button></div>
   </div>`;
 }
 ACTS['check-ans'] = t => {
@@ -1572,19 +2035,22 @@ function beatReport(b) {
   const rows = S.log.filter(x => x.ch === chapter().id);
   const total = rows.reduce((a, x) => a + x.profit, 0);
   const list = typeof b.list === 'function' ? b.list() : b.list;
+  /* the last chapter always ends the game, whatever the mode selected */
+  const last = S.chIdx >= S.chs.length - 1;
+  const nextLabel = last ? 'Go to the debrief \u2192' : (b.btn || 'Next chapter \u2192');
   return `
   <div class="card fade">
     <div class="kicker">Chapter ${chapter().n} &middot; debrief</div>
-    <h2>${b.title}</h2>
+    <h2>${beatTitle(b)}</h2>
     ${(b.paras || []).map(p => `<div class="narr">${p}</div>`).join('')}
-    <div class="card tight" style="background:var(--surface2)">
+    <div class="card tight" data-note="flat">
       ${rows.map(x => `<div class="scoreline"><span>${x.label}</span><b class="${x.profit >= 0 ? '' : 'bad'}">${money(x.profit, 0)}</b></div>`).join('')}
       <div class="scoreline" style="border:none;font-weight:800"><span>Chapter ${chapter().n} total economic profit</span><b>${money(total, 0)}</b></div>
     </div>
     ${b.listTitle ? `<h3>${b.listTitle}</h3>` : ''}
     ${list && list.length ? `<ul class="clean">${list.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}
-    ${b.insight ? `<div class="card tight" style="background:#F0FAFF;border-color:#BCE6F8"><div class="small"><b>Remember this:</b> ${typeof b.insight === 'function' ? b.insight() : b.insight}</div></div>` : ''}
-    <div class="btnrow right"><button class="btn primary big" data-a="next">${b.btn || 'Next chapter \u2192'}</button></div>
+    ${b.insight ? `<div class="card tight" data-note="blue"><div class="small"><b>Remember this:</b> ${typeof b.insight === 'function' ? b.insight() : b.insight}</div></div>` : ''}
+    <div class="btnrow right"><button class="btn primary big" data-a="next">${nextLabel}</button></div>
   </div>`;
 }
 
@@ -1596,6 +2062,7 @@ function beatDecision(b) {
   if (b.kind === 'mc') return decMC(b);
   if (b.kind === 'oligo') return decOligo(b);
   if (b.kind === 'mono') return decMono(b);
+  if (b.kind === 'buyer') return decBuyer(b);
   return '';
 }
 
@@ -1653,7 +2120,7 @@ function decPC(b) {
       <div class="tile ${L && MC > P ? 'warn' : ''}"><div class="tl">MC</div><div class="tv">${L ? money(MC, 2) : '\u2014'}</div><div class="ts">${L ? (MC > P ? 'MC above price' : 'MC below price') : 'not producing'}</div></div>
     </div>`;
   const foot = `
-    <div class="card tight" style="background:var(--surface2)">
+    <div class="card tight" data-note="flat">
       <div class="small" style="font-weight:800">Your market position</div>
       <div class="scoreline"><span>Market price</span><b>$${fmt(P, 0)}</b></div>
       <div class="scoreline"><span>Your share of the town market</span><b>about ${fmt(Q / ECON.marketQ(P) * 100, 0)}%</b></div>
@@ -1665,7 +2132,7 @@ function decPC(b) {
   return decShell(b, ctl, out, `<div class="chartcard" data-view="dec-pc-chart"></div>`, foot);
 }
 
-/* ---------------- Chapter 2: monopolistic competition ---------------- */
+/* ---------------- monopolistic competition (chapter 3) ---------------- */
 const AD_LEVELS = [
   { v: 0, label: 'No advertising', spend: 0, mult: 1.0 },
   { v: 1, label: 'Local posters', spend: 140, mult: 1.40 },
@@ -1726,7 +2193,7 @@ function decMC(b) {
       <div class="tile ${r.profit >= 0 ? 'pos' : 'neg'}"><div class="tl">Economic profit</div><div class="tv">${money(r.profit)}</div><div class="ts">TR \u2212 TC</div></div>
     </div>`;
   const foot = `
-    <div class="card tight" style="background:var(--surface2)">
+    <div class="card tight" data-note="flat">
       <div class="small" style="font-weight:800">Your market position</div>
       <div class="scoreline"><span>Product</span><b>${esc(prod().variants[S.dec.variant] || prod().variants[0])}</b></div>
       <div class="scoreline"><span>Number of rival ${sellers()}</span><b>many</b></div>
@@ -1765,6 +2232,8 @@ ACTS['dec-lock'] = () => {
     lockOligo(b);
   } else if (b.kind === 'mono') {
     lockMono(b);
+  } else if (b.kind === 'buyer') {
+    lockBuyer(b);
   }
   repaint();
   paintTop();
@@ -1794,19 +2263,19 @@ function cfgMCFirm(w, o) {
   const shapes = [], points = [], hlines = [], vlines = [];
   if (r && r.sold > 0.05) {
     const acHere = r.tc / r.qp;
-    shapes.push({ type: 'rect', x0: 0, y0: Math.max(acHere, o.P), x1: r.sold, y1: Math.min(acHere, o.P), fill: r.profit >= 0 ? '#0E9F6E' : '#DA3A3F', opacity: .17, stroke: r.profit >= 0 ? '#0E9F6E' : '#DA3A3F', sw: 1.5, dash: '4 3' });
-    points.push({ x: r.sold, y: o.P, color: '#0E1B2C', r: 6, label: `you: ${fmt(r.sold, 1)} units at $${fmt(o.P, 0)}`, dy: -11, anchor: 'middle', dx: 0 });
-    if (r.lost > 0.05) vlines.push({ x: r.qd, color: '#DA3A3F', label: `${fmt(r.lost, 1)} customers turned away` });
+    shapes.push({ type: 'rect', x0: 0, y0: Math.max(acHere, o.P), x1: r.sold, y1: Math.min(acHere, o.P), fill: r.profit >= 0 ? PAL.green : PAL.red, opacity: .17, stroke: r.profit >= 0 ? PAL.green : PAL.red, sw: 1.5, dash: '4 3' });
+    points.push({ x: r.sold, y: o.P, color: PAL.ink, r: 6, label: `you: ${fmt(r.sold, 1)} units at $${fmt(o.P, 0)}`, dy: -11, anchor: 'middle', dx: 0 });
+    if (r.lost > 0.05) vlines.push({ x: r.qd, color: PAL.red, label: `${fmt(r.lost, 1)} customers turned away` });
   }
   return {
     w, h: Math.round(Math.min(500, Math.max(310, w * 0.46))),
     x: [0, qMax], y: [0, yMax],
     xLabel: 'Your output q (units per period)', yLabel: 'Price / cost ($)',
     series: filter([
-      { pts: dem, color: '#0E9F6E', width: 2.8, label: 'D = AR' },
-      { pts: mr, color: '#8B5CF6', width: 2.4, label: 'MR', dash: '6 4' },
-      { pts: mc, color: '#DA3A3F', width: 2.8, label: 'MC' },
-      { pts: ac, color: '#1C6FD4', width: 2.8, label: 'AC' }
+      { pts: dem, color: PAL.green, width: 2.8, label: 'D = AR', area: .08 },
+      { pts: mr, color: PAL.violet, width: 2.4, label: 'MR', dash: '6 4' },
+      { pts: mc, color: PAL.red, width: 2.8, label: 'MC' },
+      { pts: ac, color: PAL.blue, width: 2.8, label: 'AC' }
     ]),
     shapes, points, vlines, hlines
   };
@@ -1854,7 +2323,7 @@ BEATS.pc = () => ([
     brief: `The price is given to you. Hire workers, produce, and find the output that makes the most profit.`,
     after: (profit, best) => `
       <div class="narr"><b>Where you stopped is the whole lesson.</b> Profit is highest where the cost of making one more ${prod().unit} (MC) is just equal to what the market pays for it ($40). Produce one unit more and MC climbs above the price \u2014 you would be adding cost faster than revenue.</div>
-      <div class="card tight" style="background:#FFF9E8;border-color:#F0E0B8">
+      <div class="card tight" data-note="amber">
         <div class="small"><b>Now notice what you could not do.</b> There was no price to choose. If you had raised your price to $45, every single customer would have walked next door and bought the identical ${prod().unit} for $40. Your demand curve is a flat horizontal line at the market price: <b>P = AR = MR</b>.</div>
       </div>`
   },
@@ -1887,12 +2356,12 @@ BEATS.pc = () => ([
     brief: `The price is now below your average total cost. You cannot change that. Decide how much to produce.`,
     after: (profit, best) => `
       <div class="narr"><b>You lost ${money(-profit)}.</b> It is tempting to close the doors and produce nothing. Before you do, look at the arithmetic.</div>
-      <div class="card tight" style="background:var(--surface2)">
+      <div class="card tight" data-note="flat">
         <div class="scoreline"><span>Produce ${fmt(ECON.output(1, best.L), 1)} units \u2192 loss</span><b class="bad">${money(profit)}</b></div>
         <div class="scoreline" style="border:none"><span>Shut down, produce nothing \u2192 loss</span><b class="bad">${money(-ECON.tfc(1))}</b></div>
       </div>
       <div class="narr">Producing is the smaller loss. The rent and the machine lease must be paid either way \u2014 that is what makes them <b>fixed</b>. As long as the price covers <b>average variable cost</b>, every unit sold pays its own wages and materials and leaves something over towards the rent.</div>
-      <div class="card tight" style="background:#FFF9E8;border-color:#F0E0B8"><div class="small"><b>The shutdown price.</b> Below about <b>${money(ECON.minAVC(), 2)}</b> the price would no longer cover average variable cost, and the firm would be better off producing nothing at all.</div></div>`
+      <div class="card tight" data-note="amber"><div class="small"><b>The shutdown price.</b> Below about <b>${money(ECON.minAVC(), 2)}</b> the price would no longer cover average variable cost, and the firm would be better off producing nothing at all.</div></div>`
   },
   {
     t: 'check',
@@ -1923,7 +2392,7 @@ BEATS.pc = () => ([
     brief: 'The market has thinned out and demand has risen. The price is profitable again \u2014 but notice how much thinner the margin is than in your first season.',
     after: (profit, best) => `
       <div class="narr">You are back in profit, but $${fmt(profit, 0)} is a long way short of your first season. <b>Competition has taken most of it.</b></div>
-      <div class="card tight" style="background:var(--surface2)">
+      <div class="card tight" data-note="flat">
         <div class="scoreline"><span>Season 1 at $40</span><b>${money(358.8)}</b></div>
         <div class="scoreline"><span>Season 2 at $27</span><b class="bad">${money(-92.5)}</b></div>
         <div class="scoreline" style="border:none"><span>Season 3 at $34</span><b>${money(141.7)}</b></div>
@@ -1955,7 +2424,7 @@ BEATS.pc = () => ([
       `<b>The long-run outcome is efficient.</b> P = MC (allocative efficiency: the last unit made is worth exactly what it costs) and output is at minimum AC (productive efficiency: it is made at the lowest possible average cost). The consumer gets the product at cost \u2014 and the firm gets nothing extra.`
     ],
     insight: 'Zero economic profit does not mean a bad business. It means you earn exactly the normal return available on your capital and labour anywhere else \u2014 which is precisely what competition delivers.',
-    btn: 'Next: what if your product were different? \u2192'
+    btn: 'Next: what if you were the only seller in town? \u2192'
   }
 ]);
 
@@ -1964,8 +2433,10 @@ BEATS.pc = () => ([
    ============================================================ */
 
 /* ============================================================
-   MARKET FORCES — Chapter 2 Monopolistic Competition,
-   Chapter 3 Oligopoly, Chapter 4 Monopoly
+   MARKET FORCES — monopolistic competition (chapter 3),
+   oligopoly (chapter 4) and monopoly (chapter 2).
+   File order is mc → oligo → mono; the playing order is the one in
+   CHAPTERS (03_ui.js): pc → mono → mc → oligo.
    ============================================================ */
 
 const RIVAL_NAME = 'Northwind';
@@ -1981,12 +2452,12 @@ function variantName() { return prod().variants[S.dec.variant || 0] || prod().va
 BEATS.mc = () => ([
   {
     t: 'intro',
-    kicker: 'Chapter 2 \u00b7 Monopolistic Competition',
+    kicker: 'Chapter 3 \u00b7 Monopolistic Competition',
     title: 'Make something people can tell apart',
     paras: [
-      'Chapter 1 taught you an uncomfortable lesson: when your product is identical to everyone else\u2019s, you have no power at all. You never chose a price, and competition took every dollar of your profit.',
-      `So this time you do something different. You keep the workshop and the machine, but you redesign the product and give it a name. It is still a ${prod().unit} \u2014 but it is <b>your</b> version of it.`,
-      `Some customers will now go out of their way for it. That gives you a <b>downward-sloping demand curve of your own</b> \u2014 you finally get to choose a price. But the power is limited: dozens of other ${sellers()} sell close substitutes, and nothing at all stops them copying you.`
+      'You have now seen both extremes of the same workshop. In Chapter 1 your product was identical to everyone else\u2019s and you had no power at all \u2014 you never chose a price, and competition took every dollar of profit. In Chapter 2 a licence and a patent made you the only seller in town, and the price was entirely yours.',
+      `This chapter is the realistic middle, and it is where most real firms actually live. You keep the workshop, the machine and the product \u2014 but you give it a name, a look and a reason for customers to prefer it. It is still a ${prod().unit}, but it is <b>your</b> version of it. No licence protects you, and nothing at all stops anyone copying you.`,
+      `Some customers will now go out of their way for it. That gives you a <b>downward-sloping demand curve of your own</b> \u2014 you get to choose a price again. But the power is limited: dozens of other ${sellers()} sell close substitutes, and the moment your idea works they will imitate it.`
     ],
     choices: () => prod().variants.map((v, i) => ({ v: i, label: v, sub: 'your version' })),
     onPick: v => { S.dec.variant = +v; },
@@ -2020,10 +2491,10 @@ BEATS.mc = () => ([
     brief: 'You choose the price now. Watch how many customers you attract, make sure you can actually produce that many, and check the profit.',
     after: r => `
       <div class="narr">At <b>$${fmt(S.dec.P, 0)}</b> you sold ${fmt(r.sold, 1)} units at an average cost of ${money(r.tc / (r.qp || 1), 2)}, earning <b>${money(r.profit)}</b> of economic profit.</div>
-      <div class="card tight" style="background:#FFF9E8;border-color:#F0E0B8">
+      <div class="card tight" data-note="amber">
         <div class="small"><b>This is the moment you gained market power.</b> Compare it with Chapter 1: there, price was fixed at $40 and you took whatever the market gave you. Here, at $${fmt(S.dec.P, 0)}, you could have chosen $35 or $45 instead \u2014 and your profit would have been different. Your demand curve slopes down, so <b>MR &lt; P</b>, and you stop where <b>MR = MC</b>.</div>
       </div>
-      <div class="card tight" style="background:var(--surface2)"><div class="small muted">Advertising note: at launch, a local poster campaign costs ${money(140)} and lifts demand by 40%. Whether that pays for itself depends entirely on your margin per unit.</div></div>`
+      <div class="card tight" data-note="flat"><div class="small muted">Advertising note: at launch, a local poster campaign costs ${money(140)} and lifts demand by 40%. Whether that pays for itself depends entirely on your margin per unit.</div></div>`
   },
   {
     t: 'event', cls: 'warn', tag: 'Market event \u00b7 imitation',
@@ -2051,7 +2522,7 @@ BEATS.mc = () => ([
     after: r => `
       <div class="narr">Best possible result with this demand: <b>${money(103.5)}</b> if you do not advertise, or about <b>${money(113.7)}</b> with local posters. You ended at <b>${money(r.profit)}</b>.</div>
       <div class="narr">Read that carefully. Imitators have taken roughly <b>two thirds</b> of your profit, and spending ${money(140)} on posters buys back only a few dollars. <b>Advertising here is almost exactly self-cancelling</b>: it lifts demand, but it also adds a cost your rivals do not have to pay unless they copy that too.</div>
-      <div class="card tight" style="background:#FFF9E8;border-color:#F0E0B8"><div class="small">This is the uncomfortable centre of monopolistic competition. You have <i>some</i> power \u2014 enough to choose a price, enough to run a real business \u2014 but not enough to keep the profit, because entry and imitation keep eating it.</div></div>`
+      <div class="card tight" data-note="amber"><div class="small">This is the uncomfortable centre of monopolistic competition. You have <i>some</i> power \u2014 enough to choose a price, enough to run a real business \u2014 but not enough to keep the profit, because entry and imitation keep eating it.</div></div>`
   },
   {
     t: 'check',
@@ -2133,7 +2604,7 @@ function oligoHistory() {
   if (!o.mine.length) return '';
   const rows = o.mine.map((m, i) =>
     `<div class="scoreline"><span>Round ${i + 1} \u00b7 you ${m === 'H' ? 'kept $' + OLIGO_H : 'cut to $' + OLIGO_L} \u00b7 ${RIVAL_NAME} ${o.rival[i] === 'H' ? 'kept $' + OLIGO_H : 'cut to $' + OLIGO_L}</span><b class="${o.pay[i] >= 0 ? '' : 'bad'}">${money(o.pay[i])}</b></div>`).join('');
-  return `<div class="card tight" style="background:var(--surface2)"><div class="small" style="font-weight:800">Play so far</div>${rows}</div>`;
+  return `<div class="card tight" data-note="flat"><div class="small" style="font-weight:800">Play so far</div>${rows}</div>`;
 }
 
 function decOligo(b) {
@@ -2150,7 +2621,7 @@ function decOligo(b) {
         <div class="tile"><div class="tl">${RIVAL_NAME}</div><div class="tv">$${riv === 'H' ? OLIGO_H : OLIGO_L}</div><div class="ts">${riv === 'H' ? 'kept high' : 'cut'}</div></div>
         <div class="tile ${pay >= 0 ? 'pos' : 'neg'}"><div class="tl">Your profit</div><div class="tv">${money(pay)}</div><div class="ts">added to firm value</div></div>
       </div>
-      <div class="card tight" style="background:var(--surface2)">${oligoMatrix(o)}</div>
+      <div class="card tight" data-note="flat">${oligoMatrix(o)}</div>
       ${b.after ? b.after() : ''}
       <div class="btnrow right"><button class="btn primary big" data-a="next">Continue \u2192</button></div>
     </div>`;
@@ -2174,7 +2645,7 @@ function decOligo(b) {
     </div>
     ${oligoHistory()}`;
   const foot = `
-    <div class="card tight" style="background:#F0FAFF;border-color:#BCE6F8">
+    <div class="card tight" data-note="blue">
       <div class="small" style="font-weight:800">Your market position</div>
       <div class="scoreline"><span>Firms in this market</span><b>2</b></div>
       <div class="scoreline"><span>Your rival</span><b>${RIVAL_NAME}</b></div>
@@ -2182,7 +2653,7 @@ function decOligo(b) {
       <div class="scoreline" style="border:none"><span>Price above marginal cost?</span><b>Yes \u2014 both of you</b></div>
       <div class="small muted" style="margin-top:.4rem">Two big firms, close substitutes, and no new entrant on the horizon. Each of you must guess what the other will do \u2014 and each of you knows the other is guessing too.</div>
     </div>
-    ${o.collude ? '<div class="card tight" style="background:var(--warnbg);border-color:#F0DDB8"><div class="small"><b>Price agreement in force.</b> You and ' + RIVAL_NAME + ' have agreed to hold the line at $' + OLIGO_H + '. The margins are excellent. Whether it is legal is another question entirely.</div></div>' : ''}`;
+    ${o.collude ? '<div class="card tight" style="background:var(--warnbg);border-color:#EEDBAD"><div class="small"><b>Price agreement in force.</b> You and ' + RIVAL_NAME + ' have agreed to hold the line at $' + OLIGO_H + '. The margins are excellent. Whether it is legal is another question entirely.</div></div>' : ''}`;
   return decShell(b, ctl, out, '', foot);
 }
 ACTS['dec-oligo'] = t => { S.dec.choice = t.dataset.v; res(); };
@@ -2202,12 +2673,12 @@ function lockOligo(b) {
 BEATS.oligo = () => ([
   {
     t: 'intro',
-    kicker: 'Chapter 3 \u00b7 Oligopoly',
+    kicker: 'Chapter 4 \u00b7 Oligopoly',
     title: 'Two of you, and nobody else',
     paras: [
       'The smaller ' + sellers() + ' have gone. Through a decade of takeovers and closures, the town\u2019s market has consolidated into <b>two large producers</b>: you, and ' + RIVAL_NAME + '.',
       'Your products are close substitutes. Customers treat them as the same thing, so whatever you charge, ' + RIVAL_NAME + ' can charge something slightly different and take your customers \u2014 and you can do the same to them.',
-      '<b>This changes the game completely.</b> In Chapters 1 and 2 your best move depended only on the market. Here it depends on what your rival does \u2014 and their best move depends on what you do. Economists call this <b>strategic interdependence</b>.'
+      '<b>This changes the game completely.</b> In the first three chapters your best move depended only on the market. Here it depends on what your rival does \u2014 and their best move depends on what you do. Economists call this <b>strategic interdependence</b>.'
     ],
     art: () => artStreet(prod(), S.colour, [
       { label: S.firmName || 'You', sub: 'your brand', mine: true },
@@ -2317,7 +2788,7 @@ BEATS.oligo = () => ([
     t: 'report',
     title: 'When your best move depends on their move',
     paras: [
-      'In Chapters 1 and 2, the market told you what to do. Here, your profit depended on a guess about another human being \u2014 and they were guessing about you.'
+      'In the first three chapters the market told you what to do. Here, your profit depended on a guess about another human being \u2014 and they were guessing about you.'
     ],
     listTitle: 'Three things you should be able to explain now',
     list: [
@@ -2326,7 +2797,7 @@ BEATS.oligo = () => ([
       '<b>Cartels are unstable \u2014 and illegal.</b> Price fixing raises prices and restricts output, which is why competition authorities treat it as a serious offence. Even without the law, the incentive to cheat tends to break agreements apart.'
     ],
     insight: 'Oligopoly is the only market structure where the outcome depends on how firms behave towards each other. The same cost and demand conditions can produce a price war or a comfortable duopoly \u2014 which is exactly why regulators watch this market so closely.',
-    btn: 'The final chapter: what if you were the only firm left? \u2192'
+    btn: 'Carry on \u2192'
   }
 ]);
 
@@ -2369,25 +2840,25 @@ function cfgMonopoly(w, o) {
     if (q <= ECON.V * K * 0.99) { mc.push([q, ECON.mc(K, l)]); ac.push([q, ECON.ac(K, l)]); }
   }
   const ser = [
-    { pts: dem.filter(p => p[1] >= 0), color: '#0E9F6E', width: 3, label: 'D = market demand' },
-    { pts: mr.filter(p => p[1] >= 0), color: '#8B5CF6', width: 2.4, label: 'MR', dash: '6 4' },
-    { pts: mc.filter(p => p[1] <= yMax), color: '#DA3A3F', width: 3, label: 'MC' },
-    { pts: ac.filter(p => p[1] <= yMax), color: '#1C6FD4', width: 3, label: 'AC' }
+    { pts: dem.filter(p => p[1] >= 0), color: PAL.green, width: 3, label: 'D = market demand', area: .07 },
+    { pts: mr.filter(p => p[1] >= 0), color: PAL.violet, width: 2.4, label: 'MR', dash: '6 4' },
+    { pts: mc.filter(p => p[1] <= yMax), color: PAL.red, width: 3, label: 'MC' },
+    { pts: ac.filter(p => p[1] <= yMax), color: PAL.blue, width: 3, label: 'AC' }
   ];
   const shapes = [], points = [], vlines = [];
   if (m.feasible && m.Q > 0) {
-    shapes.push({ type: 'rect', x0: 0, y0: Math.max(m.ac, P), x1: m.Q, y1: Math.min(m.ac, P), fill: '#0E9F6E', opacity: .18, stroke: '#0E9F6E', sw: 1.6, dash: '4 3' });
-    points.push({ x: m.Q, y: P, color: '#0E1B2C', r: 6.5, label: `you: ${fmt(m.Q, 0)} units at $${fmt(P, 0)}`, dy: -12, anchor: 'middle', dx: 0 });
-    vlines.push({ x: m.Q, color: '#93A2B8', label: `Q = ${fmt(m.Q, 0)}` });
-    points.push({ x: m.Q / 2, y: (m.ac + P) / 2, color: '#0E9F6E', r: 0, label: 'profit', anchor: 'middle', dx: 0 });
+    shapes.push({ type: 'rect', x0: 0, y0: Math.max(m.ac, P), x1: m.Q, y1: Math.min(m.ac, P), fill: PAL.green, opacity: .18, stroke: PAL.green, sw: 1.6, dash: '4 3' });
+    points.push({ x: m.Q, y: P, color: PAL.ink, r: 6.5, label: `you: ${fmt(m.Q, 0)} units at $${fmt(P, 0)}`, dy: -12, anchor: 'middle', dx: 0 });
+    vlines.push({ x: m.Q, color: PAL.guide, label: `Q = ${fmt(m.Q, 0)}` });
+    points.push({ x: m.Q / 2, y: (m.ac + P) / 2, color: PAL.green, r: 0, label: 'profit', anchor: 'middle', dx: 0 });
     if (o.welfare) {
       const d = dwlArea(K, m.Q, P, m.mc);
       if (d.area > 1) {
-        shapes.push({ type: 'poly', pts: [[m.Q, P], [m.Q, m.mc], [d.so.q, d.so.mc]], fill: '#DA3A3F', opacity: .26, stroke: '#DA3A3F', sw: 1.6 });
-        points.push({ x: (m.Q + d.so.q) / 2, y: (m.mc + P) / 2 - 4, color: '#DA3A3F', r: 0, label: 'value destroyed', anchor: 'middle', dx: 0 });
-        vlines.push({ x: d.so.q, color: '#DA3A3F', label: 'where D = MC' });
+        shapes.push({ type: 'poly', pts: [[m.Q, P], [m.Q, m.mc], [d.so.q, d.so.mc]], fill: PAL.red, opacity: .26, stroke: PAL.red, sw: 1.6 });
+        points.push({ x: (m.Q + d.so.q) / 2, y: (m.mc + P) / 2 - 4, color: PAL.red, r: 0, label: 'value destroyed', anchor: 'middle', dx: 0 });
+        vlines.push({ x: d.so.q, color: PAL.red, label: 'where D = MC' });
       } else {
-        vlines.push({ x: d.so.q, color: '#DA3A3F', label: 'where D = MC' });
+        vlines.push({ x: d.so.q, color: PAL.red, label: 'where D = MC' });
       }
     }
   }
@@ -2396,6 +2867,61 @@ function cfgMonopoly(w, o) {
     x: [0, 300], y: [0, yMax],
     xLabel: 'Market output Q (units per period)', yLabel: 'Price / cost ($)',
     series: ser, shapes, points, vlines
+  };
+}
+
+/* ---- the input market, when the firm is the town's only employer ---- */
+function cfgMonopsony(w, o) {
+  const K = o.K, W = o.W;
+  const xMax = 26, yMax = 210;
+  const r = ECON.buyerState(K, W);
+  const comp = ECON.competitiveWage(K);
+
+  const supply = [], mfc = [], mrp = [];
+  for (let L = 0; L <= xMax; L += 0.5) {
+    if (ECON.supplyWage(L) <= yMax) supply.push([L, ECON.supplyWage(L)]);
+    if (ECON.mfc(L) <= yMax) mfc.push([L, ECON.mfc(L)]);
+    if (L >= 0.5) { const m = ECON.mrp(K, L); if (m > 0 && m <= yMax) mrp.push([L, m]); }
+  }
+
+  const shapes = [], points = [], vlines = [], hlines = [];
+
+  /* the value the town never gets: between the monopsony employment and the
+     competitive one, each worker is worth more than they would have to be paid */
+  if (o.welfare !== false && comp && comp.L > r.L + 0.4) {
+    const pts = [], n = 8, clip = v => Math.min(yMax, Math.max(0, v));
+    for (let i = 0; i <= n; i++) { const L = r.L + i * (comp.L - r.L) / n; pts.push([L, clip(ECON.mrp(K, L))]); }
+    for (let i = n; i >= 0; i--) { const L = r.L + i * (comp.L - r.L) / n; pts.push([L, ECON.supplyWage(L)]); }
+    shapes.push({ type: 'poly', pts, fill: PAL.red, opacity: .17, stroke: PAL.red, sw: 1.4, dash: '4 3' });
+    points.push({ x: (r.L + comp.L) / 2, y: ECON.supplyWage(r.L) + 22, color: PAL.red, r: 0, label: 'value never created', anchor: 'middle', dx: 0 });
+  }
+
+  /* the wedge the firm keeps, drawn as a slim bar at its chosen employment.
+     When the wage is already close to what a worker adds there is nothing to
+     show and no room for a second label, so both are skipped. */
+  const bigGap = (r.mrp - W) > 22;
+  if (r.L > 0.3 && bigGap) {
+    shapes.push({ type: 'poly', pts: [[r.L - 0.13, W], [r.L + 0.13, W], [r.L + 0.13, r.mrp], [r.L - 0.13, r.mrp]], fill: PAL.red, opacity: .55 });
+  }
+
+  points.push({ x: r.L, y: W, color: PAL.ink, r: 6.5, label: `you: ${fmt(r.L, 1)} workers at $${fmt(W, 0)}`, dy: -13, anchor: 'middle', dx: 0 });
+  if (r.L > 0.3 && bigGap) points.push({ x: r.L, y: r.mrp, color: PAL.red, r: 5, label: `each adds $${fmt(r.mrp, 0)}`, dy: -11, anchor: 'middle', dx: 0 });
+  if (comp) points.push({ x: comp.L, y: comp.W, color: PAL.green, r: 5 });
+
+  hlines.push({ y: W, color: PAL.ink, dash: '6 4', label: `your wage $${fmt(W, 0)}`, labelSide: 'left' });
+  vlines.push({ x: r.L, color: PAL.guide });
+  if (comp && Math.abs(comp.L - r.L) > 1) vlines.push({ x: comp.L, color: PAL.green, label: 'competitive employment' });
+
+  return {
+    w, h: Math.round(Math.min(520, Math.max(320, w * 0.46))),
+    x: [0, xMax], y: [0, yMax],
+    xLabel: 'Workers employed', yLabel: 'Wage / value per worker ($)',
+    series: [
+      { pts: supply, color: PAL.green, width: 3, label: 'Labour supply' },
+      { pts: mfc, color: PAL.violet, width: 2.6, label: 'MFC', dash: '6 4' },
+      { pts: mrp, color: PAL.red, width: 3, label: 'MRP = what a worker adds' }
+    ],
+    shapes, points, vlines, hlines
   };
 }
 
@@ -2451,7 +2977,7 @@ function decMono(b) {
       <div class="tile ${m.feasible && m.profit >= 0 ? 'pos' : 'neg'}"><div class="tl">Economic profit</div><div class="tv">${m.feasible ? money(m.profit) : '\u2014'}</div><div class="ts">TR \u2212 TC</div></div>
     </div>`;
   const foot = `
-    <div class="card tight" style="background:var(--surface2)">
+    <div class="card tight" data-note="flat">
       <div class="small" style="font-weight:800">Your market position</div>
       <div class="scoreline"><span>Other firms producing in town</span><b>none</b></div>
       <div class="scoreline"><span>Barriers to entry</span><b>very high</b></div>
@@ -2478,20 +3004,97 @@ function lockMono(b) {
   addValue(profit);
 }
 
+/* ---------------- the monopsony decision ----------------
+   The firm names a wage; the town's labour supply decides how many people turn
+   up. One slider, and everything downstream — employment, output, the price the
+   firm can charge, its profit and the town's wage bill — follows from it. */
+function decBuyer(b) {
+  const K = S.dec.buyK, W = S.dec.W;
+  const r = ECON.buyerState(K, W);
+  const oldR = ECON.buyerState(K, ECON.WAGE);
+  const comp = ECON.competitiveWage(K);
+
+  if (S.locked) {
+    const dwl = ECON.monopsonyDWL(K);
+    const bill = W * r.L, oldBill = oldR.W * oldR.L;
+    const gain = r.profit - oldR.profit;
+    return `
+    <div class="card event ${gain >= 0 ? 'good' : 'bad'} fade">
+      <div class="kicker">Result</div>
+      <h2>You are the town\u2019s only employer</h2>
+      <div class="tiles">
+        <div class="tile hi"><div class="tl">Wage you offer</div><div class="tv">$${fmt(W, 0)}</div><div class="ts">${W < ECON.WAGE ? money(ECON.WAGE - W, 0) + ' below the old wage' : W > ECON.WAGE ? money(W - ECON.WAGE, 0) + ' above the old wage' : 'the old market wage'}</div></div>
+        <div class="tile"><div class="tl">People who will work</div><div class="tv">${fmt(r.L, 1)}</div><div class="ts">at $${fmt(W, 0)} an hour</div></div>
+        <div class="tile"><div class="tl">Output</div><div class="tv">${fmt(r.Q, 0)}</div><div class="ts">sold at $${fmt(r.P, 2)}</div></div>
+        <div class="tile"><div class="tl">Pay going into the town</div><div class="tv">${money(bill)}</div><div class="ts">${bill <= oldBill ? money(oldBill - bill, 0) + ' less than at $90' : money(bill - oldBill, 0) + ' more than at $90'}</div></div>
+        <div class="tile ${gain >= 0 ? 'pos' : 'neg'}"><div class="tl">Economic profit</div><div class="tv">${money(r.profit)}</div><div class="ts">${gain >= 0 ? '+' : ''}${money(gain, 0)} against $90</div></div>
+      </div>
+      <div class="chartcard" data-view="dec-buyer-chart"></div>
+      ${b.after(r, ECON.bestWage(K), comp, dwl, oldR)}
+      <div class="btnrow right"><button class="btn primary big" data-a="next">Continue \u2192</button></div>
+    </div>`;
+  }
+
+  const ctl = `
+    <div class="ctl" style="margin-top:0">
+      <div class="clab"><span class="t">The wage you offer</span><span class="v">$${fmt(W, 2)}</span></div>
+      <input type="range" min="45" max="115" step="0.5" value="${W}" data-i="dec-wage">
+      <div class="ticks"><span>$45</span><span>$80</span><span>$115</span></div>
+      <div class="small muted" style="margin-top:.25rem">You are the only employer here, so the wage is yours to set. Offer less and fewer people will take the job \u2014 there is nowhere else for them to go.</div>
+    </div>
+    <div class="ctl">
+      <div class="clab"><span class="t">Show what the town loses</span></div>
+      <div class="optrow"><button class="opt ${S.dec.welfare ? 'sel' : ''}" data-a="dec-welfare">${S.dec.welfare ? 'Shown on the chart' : 'Hidden'}</button></div>
+    </div>`;
+
+  const out = `
+    <div class="tiles">
+      <div class="tile hi"><div class="tl">Workers employed</div><div class="tv">${fmt(r.L, 1)}</div><div class="ts">who would work for $${fmt(W, 0)}</div></div>
+      <div class="tile"><div class="tl">Output</div><div class="tv">${fmt(r.Q, 1)}</div><div class="ts">units per period</div></div>
+      <div class="tile"><div class="tl">Price you can charge</div><div class="tv">$${fmt(r.P, 2)}</div><div class="ts">P = 60 \u2212 Q/5</div></div>
+      <div class="tile"><div class="tl">Marginal factor cost</div><div class="tv">${money(r.mfc, 2)}</div><div class="ts">what the next worker costs you</div></div>
+      <div class="tile ${r.profit >= oldR.profit ? 'pos' : 'neg'}"><div class="tl">Economic profit</div><div class="tv">${money(r.profit)}</div><div class="ts">${r.profit >= oldR.profit ? '+' : ''}${money(r.profit - oldR.profit, 0)} against paying $90</div></div>
+    </div>`;
+
+  const foot = `
+    <div class="card tight" data-note="flat">
+      <div class="small" style="font-weight:800">Your position as a buyer</div>
+      <div class="scoreline"><span>Employers in this town</span><b>one \u2014 you</b></div>
+      <div class="scoreline"><span>Hiring one more worker costs</span><b>${money(r.mfc, 2)}</b></div>
+      <div class="scoreline"><span>...and that worker adds</span><b>${money(r.mrp, 2)}</b></div>
+      <div class="scoreline" style="border:none"><span>You keep the difference</span><b class="${r.mrp - W > 0 ? 'good' : 'bad'}">${money(Math.max(0, r.mrp - W), 2)} per worker</b></div>
+      <div class="small muted" style="margin-top:.4rem">Taking on one more person means paying everyone you already employ a little more, so the <i>marginal factor cost</i> (purple) sits above the wage the workers actually receive (black). You hire where that marginal cost meets what a worker adds, then pay the lowest wage the supply curve will accept at that number of workers.</div>
+    </div>
+    <div class="btnrow"><button class="btn primary wide big" data-a="dec-lock">Lock in the wage</button></div>`;
+
+  return decShell(b, ctl, out, `<div class="chartcard" data-view="dec-buyer-chart"></div>`, foot);
+}
+ACTS['dec-wage'] = t => { S.dec.W = +t.value; res(); };
+VIEWS['dec-buyer-chart'] = w => chart(cfgMonopsony(w, { K: S.dec.buyK, W: S.dec.W, welfare: S.dec.welfare }));
+
+function lockBuyer(b) {
+  const r = ECON.buyerState(S.dec.buyK, S.dec.W);
+  const best = ECON.bestWage(S.dec.buyK);
+  if (Math.abs(S.dec.W - best.W) <= 2.5) S.insight += 10;
+  logRun('mono', `${b.label || 'Monopsony'} \u2014 wage $${fmt(S.dec.W, 0)}`, r.profit);
+  addValue(r.profit);
+}
+
 BEATS.mono = () => ([
   {
     t: 'intro',
-    kicker: 'Chapter 4 \u00b7 Monopoly',
+    kicker: 'Chapter 2 \u00b7 Monopoly',
     title: 'The only firm in town',
     paras: [
-      'Your firm has become the last producer standing. The others sold up, moved away or went bankrupt, and no one can replace them: you hold an <b>exclusive production licence</b> granted by the town, and the technology is protected by a patent. A new entrant is not merely difficult to imagine \u2014 it is legally impossible.',
-      '<b>This is the opposite of Chapter 1 in every way.</b> There, a hundred sellers offered an identical product and no one could influence the price. Here, one seller offers a product nobody else can legally make, and the price is entirely yours to choose.',
+      'Chapter 1 ended with a workshop that worked perfectly and earned nothing. Then two things happened in the same week. The town council, worried about how crowded the market had become, replaced the eight street licences with <b>one exclusive licence</b> \u2014 and you won it. And the new production process you had been quietly developing was finally <b>granted a patent</b>.',
+      'Between them, those two pieces of paper change everything. A rival is no longer merely unlikely: it is <b>legally impossible</b>. Economists call this a <b>barrier to entry</b>, and it is the one thing that decides whether market power exists at all.',
+      '<b>This is the exact opposite of Chapter 1.</b> There, eight sellers offered an identical product and nobody could influence the price. Here, one seller offers a product nobody else can legally make, and the price is entirely yours to choose.',
       'There is only one thing standing in your way, and it is your own demand curve: <b>to sell more, you must charge less.</b>'
     ],
     bullets: [
-      '<b>Barriers to entry:</b> the licence and the patent. Nobody can compete with you.',
-      '<b>You face the whole market demand curve:</b> P = 60 \u2212 Q/5.',
-      '<b>The consequence:</b> marginal revenue falls below price. Selling one more unit forces you to charge less on <i>all</i> of the units you were already selling.'
+      '<b>Barriers to entry:</b> the exclusive licence and the patent. Nobody can compete with you.',
+      '<b>What changed, and what did not:</b> the machines, the workers and the costs are exactly as they were in Chapter 1.',
+      '<b>You now face the whole market demand curve:</b> P = 60 \u2212 Q/5. Marginal revenue falls below price, because selling one more unit forces you to charge less on <i>all</i> the units you were already selling.'
     ],
     btn: 'Set your price \u2192'
   },
@@ -2502,14 +3105,14 @@ BEATS.mono = () => ([
     brief: 'You are the only seller. Choose a price, watch how the quantity demanded responds, and find the price that earns the highest profit. The chart also shows what your pricing does to the town.',
     after: (m, bestP, transfer, d) => `
       <div class="narr"><b>Where is the rule here?</b> You stopped at ${fmt(m.Q, 0)} units, where <b>MR = MC</b> (${money(m.mr, 2)} \u2248 ${money(m.mc, 2)}). At that output you charge <b>$${fmt(S.dec.P, 0)}</b> \u2014 well above marginal cost of ${money(m.mc, 2)}.</div>
-      <div class="card tight" style="background:var(--surface2)">
+      <div class="card tight" data-note="flat">
         <div class="scoreline"><span>Monopoly price</span><b>$${fmt(S.dec.P, 0)}</b></div>
         <div class="scoreline"><span>Marginal cost</span><b>${money(m.mc, 2)}</b></div>
         <div class="scoreline"><span>Average cost</span><b>${money(m.ac, 2)}</b></div>
         <div class="scoreline" style="border:none"><span>Price above average cost by</span><b class="good">${money(S.dec.P - m.ac, 2)} per unit</b></div>
       </div>
       <div class="narr">Compare this with Chapter 1, where the long-run price fell to the minimum of average cost and economic profit was zero. Here, price sits far above cost and the gap is yours to keep. <b>The profit rectangle on the chart is money that consumers paid above what a competitive market would have charged \u2014 about ${money(transfer)}.</b></div>
-      ${d.area > 1 ? `<div class="card tight" style="background:#FCEDEE;border-color:#F6CFD1"><div class="small"><b>And there is a second loss that nobody receives.</b> The red triangle on the chart covers the customers who would willingly have paid more than it costs you to make the product \u2014 but never get it, because at ${fmt(m.Q, 0)} units you have no reason to supply them. About <b>${money(d.area)}</b> of value per period is destroyed outright. Your profit is a transfer; this is pure loss.</div></div>` : ''}`
+      ${d.area > 1 ? `<div class="card tight" data-note="red"><div class="small"><b>And there is a second loss that nobody receives.</b> The red triangle on the chart covers the customers who would willingly have paid more than it costs you to make the product \u2014 but never get it, because at ${fmt(m.Q, 0)} units you have no reason to supply them. About <b>${money(d.area)}</b> of value per period is destroyed outright. Your profit is a transfer; this is pure loss.</div></div>` : ''}`
   },
   {
     t: 'intro',
@@ -2544,6 +3147,30 @@ BEATS.mono = () => ([
     ]
   },
   {
+    t: 'decision', kind: 'buyer', tag: 'The other side of the market', label: 'Monopsony: setting the wage',
+    taskLabel: 'Set the town\u2019s wage and lock it in.',
+    taskHint: 'Watch how the wage decides how many people are willing to work for you \u2014 and what that does to output.',
+    setup: () => ({ buyK: 3, W: 90, welfare: true }),
+    title: 'The same power, pointed the other way',
+    brief: 'Every decision so far has been about the price you <i>charge</i>. Now look at the price you <i>pay</i>. Until this chapter, labour came from a bottomless outside market and you paid the going rate of $90 whatever you did. That market is gone: your firm is now the only employer in town, and the only buyer of the labour it needs. There is nowhere else for these people to work, so how many of them turn up depends entirely on the wage you offer. Set it.',
+    after: (r, best, comp, dwl, oldR) => {
+      const gap = Math.max(0, r.mrp - r.W);
+      const bill = r.W * r.L, oldBill = oldR.W * oldR.L;
+      const gain = r.profit - oldR.profit;
+      return `
+      <div class="narr"><b>Here is the rule, and it is the mirror image of the last one.</b> Taking on one more worker pushes up the pay of everyone you already employ, so that worker costs you more than the wage you hand over: the <b>marginal factor cost</b> of ${money(r.mfc, 2)} sits above a wage of $${fmt(r.W, 0)}. You hire up to the point where that cost meets what a worker actually adds \u2014 <b>MFC = MRP</b> \u2014 and then you pay the lowest wage the town will accept for that many workers: <b>$${fmt(r.W, 0)}</b>, which is <b>$${fmt(gap, 0)} below</b> what each of them is worth to you.</div>
+      <div class="card tight" data-note="flat">
+        <div class="scoreline"><span>Wage you pay each worker</span><b>$${fmt(r.W, 0)}</b></div>
+        <div class="scoreline"><span>What each worker adds</span><b>$${fmt(r.mrp, 0)}</b></div>
+        <div class="scoreline"><span>Total pay going into the town</span><b>${money(bill)} a period</b></div>
+        <div class="scoreline" style="border:none"><span>Paying the old $90 would have cost</span><b>${money(oldBill)}</b></div>
+      </div>
+      <div class="narr"><b>Now look at what you actually gained.</b> Your profit moved from about ${money(oldR.profit)} at $90 to ${money(r.profit)} \u2014 roughly <b>${money(gain, 0)} more</b>. But the town\u2019s wage bill fell by <b>${money(oldBill - bill, 0)}</b>. You kept only a fraction of it, because cheaper labour means fewer people working, less output, and less revenue. <b>Buying power moves income around; on its own it does not create any.</b></div>
+      ${dwl.area > 1 ? `<div class="card tight" data-note="red"><div class="small"><b>And once again some value is destroyed outright.</b> Between your ${fmt(r.L, 1)} workers and the ${fmt(comp.L, 1)} a competitive labour market would employ, every one of them is worth more to you than they would need to be paid \u2014 and that work simply never happens. About <b>${money(dwl.area)}</b> a period, the exact mirror of the deadweight loss you created as a seller.</div></div>` : ''}
+      <div class="card tight" data-note="blue"><div class="small"><b>One firm, one piece of market power, two directions.</b> As a seller you charged customers <i>above</i> your marginal cost. As a buyer you pay workers <i>below</i> what they add. Both take a surplus from somebody else, and both leave value uncreated. Remove the barrier to entry and both disappear \u2014 which is precisely what the next chapter does.</div></div>`;
+    }
+  },
+  {
     t: 'event', cls: 'warn', tag: 'Market event \u00b7 regulation',
     title: 'The patent expires, and the regulator calls',
     paras: [
@@ -2561,19 +3188,19 @@ BEATS.mono = () => ([
     brief: 'The regulator will accept any price at or below $30. You can also invest in more machines \u2014 you will need them if you want to serve the market at a low price.',
     after: (m, bestP, transfer) => `
       <div class="narr">Compare the two worlds:</div>
-      <div class="card tight" style="background:var(--surface2)">
+      <div class="card tight" data-note="flat">
         <div class="scoreline"><span>Unregulated: price $42, output 90</span><b>${money(1465.7)} profit</b></div>
         <div class="scoreline"><span>Regulated at $30, four machines: output 150</span><b>${money(528.7)} profit</b></div>
         <div class="scoreline" style="border:none"><span>Extra output delivered to consumers</span><b>60 units per period</b></div>
       </div>
       <div class="narr"><b>The regulator has transferred value from you to consumers.</b> Your profit fell by roughly $940 a period; consumers gained 60 extra units at a price close to the cost of production. This is the trade-off at the heart of competition policy: less profit for the firm, more output and lower prices for everyone else.</div>
-      <div class="card tight" style="background:#F0FAFF;border-color:#BCE6F8"><div class="small">Notice that the regulator did <b>not</b> need to break you up or take away the licence. A price cap alone changed your behaviour, because it removed the gap between price and marginal cost that made restricting output profitable.</div></div>`
+      <div class="card tight" data-note="blue"><div class="small">Notice that the regulator did <b>not</b> need to break you up or take away the licence. A price cap alone changed your behaviour, because it removed the gap between price and marginal cost that made restricting output profitable.</div></div>`
   },
   {
     t: 'report',
-    title: 'Four markets, one firm, four different lives',
+    title: 'One firm, two opposite worlds',
     paras: [
-      'You have run the same workshop through four completely different market structures. The machines, the workers and the technology never changed. Everything else did.'
+      'In Chapter 1 you were one of eight identical sellers and the market decided your price. In Chapter 2 you were the only seller in town and the price was yours to choose. The machines, the workers and the technology never changed \u2014 only the market around you did.'
     ],
     listTitle: 'Three things you should be able to explain now',
     list: () => [
@@ -2582,9 +3209,271 @@ BEATS.mono = () => ([
       '<b>Barriers to entry are what create the power.</b> Remove the licence, the patent or the control of a key input, and the monopoly disappears. A firm protected by nothing will be competed down to normal profit, exactly as in Chapter 1.'
     ],
     insight: () => `The same workshop produced ${money(S.log.filter(x => x.ch === 'pc').reduce((a, x) => a + x.profit, 0))} of economic profit under perfect competition, but ${money(S.log.filter(x => x.ch === 'mono').reduce((a, x) => a + x.profit, 0))} under monopoly. The machines, the workers and the technology never changed. <b>Market structure, not effort, decides how much profit there is to be had.</b>`,
-    btn: 'Go to the debrief \u2192'
+    btn: 'Next: what if your product were different? \u2192'
   }
 ]);
+
+/* ============================================================
+   MARKET FORCES — THE TASK SYSTEM
+   ------------------------------------------------------------
+   One registry decides three things that used to disagree:
+     1. what the student is being asked to do in this section
+     2. whether the section may be left (the exit gate)
+     3. what the side rail shows
+   If a task is not in here, it cannot block progress; if it is in
+   here, it always blocks progress. There is no second rulebook.
+   ============================================================ */
+
+/* ---- helpers: the "correct answers" the lab tasks are chasing ---- */
+function labPeerL(kind) {
+  const K = S.lab.K;
+  const low = kind === 'ac' || kind === 'avc';
+  let best = 1, v = low ? Infinity : -Infinity;
+  for (let l = 1; l <= 14; l++) {
+    const y = kind === 'mp' ? ECON.mp(K, l)
+      : kind === 'ap' ? ECON.ap(K, l)
+        : kind === 'ac' ? ECON.ac(K, l) : ECON.avc(K, l);
+    if (low ? y < v : y > v) { v = y; best = l; }
+  }
+  return best;
+}
+
+/* ---- the lab's seven tasks. Every one of them is required. ---- */
+const LAB_TASKS = [
+  {
+    id: 'p_mp', group: 'production', reward: 10,
+    label: 'Set workers so that <b>marginal product is at its maximum</b>.',
+    hint: 'Watch the MP column as you add workers — it rises, turns, then falls.',
+    met: () => S.lab.L === labPeerL('mp'),
+    why: () => `Marginal product peaks at worker ${labPeerL('mp')}: one more worker adds more output than any other hire does.`
+  },
+  {
+    id: 'p_ap', group: 'production', reward: 10,
+    label: 'Set workers so that <b>average product is at its maximum</b>.',
+    hint: 'That is exactly where AP = MP.',
+    met: () => S.lab.L === labPeerL('ap'),
+    why: () => `Average product peaks at worker ${labPeerL('ap')} — the point where the marginal worker is exactly as productive as the average.`
+  },
+  {
+    id: 'c_minac', group: 'costs', reward: 10,
+    label: 'Set workers to the level that <b>minimises average total cost</b>.',
+    hint: 'Follow the AC column down, then up again.',
+    met: () => S.lab.L === labPeerL('ac'),
+    why: () => `Average cost bottoms out at worker ${labPeerL('ac')}. Either side of it, a unit costs more to make.`
+  },
+  {
+    id: 'c_shut', group: 'costs', reward: 10,
+    label: 'Set workers to the level that <b>minimises average variable cost</b>.',
+    hint: 'The AC curve is still falling here — that is the AFC at work.',
+    met: () => S.lab.L === labPeerL('avc'),
+    why: () => `Average variable cost bottoms out at worker ${labPeerL('avc')}. Below that price there is nothing left to gain by producing, so this is the shutdown price.`
+  },
+  {
+    id: 'f_p40', group: 'profit', reward: 10,
+    label: 'At a price of <b>$40</b>, find the output that maximises profit.',
+    hint: 'Keep the price at 40 and move the workers slider.',
+    met: () => S.lab.P === 40 && S.lab.L === ECON.bestL(S.lab.K, 40).L,
+    why: () => `At $40 the best output is ${fmt(ECON.output(S.lab.K, ECON.bestL(S.lab.K, 40).L), 1)} units — where MC is just about $40.`
+  },
+  {
+    id: 'f_p24', group: 'profit', reward: 10,
+    label: 'Set the price to <b>$24</b>. Keep producing, or stop?',
+    hint: 'Compare $24 with your minimum average variable cost.',
+    met: () => S.lab.P === 24 && S.lab.L > 0,
+    why: () => 'At $24 the price still covers variable cost, so every unit made shrinks the loss. Keep going.'
+  },
+  {
+    id: 'f_p16', group: 'profit', reward: 10,
+    label: 'Set the price to <b>$16</b>. What is the right decision now?',
+    hint: 'Compare what you lose by producing with what you lose by stopping.',
+    met: () => S.lab.P === 16 && S.lab.L === 0,
+    why: () => 'At $16 the price is below minimum average variable cost. Every unit adds to the loss, so shut down and lose only the fixed cost.'
+  }
+].map(t => Object.assign(t, {
+  /* "ok" is the banked result: the student has confirmed it with Check my answers */
+  ok: () => !!S.lab.missions[t.id],
+  required: true
+}));
+
+/* ---- the tasks attached to whatever chapter beat is on screen ---- */
+function beatTasks() {
+  const b = curBeat();
+  if (!b) return [];
+  const id = 'beat:' + (S.chs[S.chIdx] || 'pc') + ':' + S.beat;
+  const mk = (label, hint, done) => [{ id, label, hint, ok: done, met: done, required: true, reward: 0 }];
+  if (b.t === 'decision') {
+    return mk(b.taskLabel || 'Lock in your decision.',
+      b.taskHint || 'Move the sliders until the numbers look right, then lock it in.',
+      () => S.locked);
+  }
+  if (b.t === 'check') {
+    return mk('Answer the question.',
+      'There is a right answer — and a reason for it.', () => S.checkAns != null);
+  }
+  if (b.t === 'intro') {
+    const chs = typeof b.choices === 'function' ? b.choices() : b.choices;
+    if (chs && chs.length) {
+      return mk('Choose how your firm will respond.',
+        'Pick one of the options to carry on.', () => S.pick != null);
+    }
+  }
+  return [];
+}
+
+/* ---- the section: what the rail is looking at right now ---- */
+function sectionKey() {
+  if (S.scene === 'lab') return 'lab:' + S.lab.tab;
+  if (S.scene === 'chapter') return 'ch:' + (S.chs[S.chIdx] || 'pc') + ':' + S.beat;
+  return S.scene;
+}
+function sectionTasks() {
+  if (S.scene === 'lab') return LAB_TASKS.filter(t => t.group === S.lab.tab);
+  if (S.scene === 'chapter') return beatTasks();
+  return [];
+}
+/* everything that must be finished before this section can be left.
+   For the lab that is every task in the factory, not just the tab you happen to be on. */
+function gateTasks() {
+  if (S.scene === 'lab') return LAB_TASKS;
+  if (S.scene === 'chapter') return beatTasks();
+  return [];
+}
+function gateMissing() { return gateTasks().filter(t => t.required && !t.ok()); }
+function gateOpen() { return gateMissing().length > 0; }
+function gateMessage() {
+  const m = gateMissing();
+  if (!m.length) return '';
+  if (S.scene === 'lab') {
+    const other = m.filter(t => t.group !== S.lab.tab);
+    const here = m.filter(t => t.group === S.lab.tab);
+    if (!here.length && other.length) return `Still open: ${other.length} task${other.length > 1 ? 's' : ''} in the other tabs of the factory.`;
+  }
+  return `Not finished yet: ${m[0].label.replace(/<[^>]+>/g, '')}`;
+}
+
+/* ---- the rail itself ---- */
+function taskCount(tasks) { return { done: tasks.filter(t => t.ok()).length, total: tasks.length }; }
+
+function railItemHTML(t) {
+  const state = t.ok() ? 'ok' : (t.met && t.met() && !t.ok()) ? 'armed' : '';
+  let hint = t.hint;
+  if (state === 'armed') hint = 'Looks right — press <b>Check my answers</b> to bank it.';
+  else if (t.ok() && t.why) hint = t.why();
+  return `<div class="tr-item ${state}">
+    <span class="tr-dot">${t.ok() ? '\u2713' : (state === 'armed' ? '!' : '')}</span>
+    <div class="tr-txt"><div class="tr-lab">${t.label}</div>${hint ? `<div class="tr-hint">${hint}</div>` : ''}</div>
+  </div>`;
+}
+
+function railBody() {
+  if (S.scene === 'lab') {
+    const cur = S.lab.tab;
+    const mine = LAB_TASKS.filter(t => t.group === cur);
+    const c = taskCount(mine), all = taskCount(LAB_TASKS);
+    const others = Object.keys(LABTABS).filter(g => g !== cur).map(g => {
+      const cc = taskCount(LAB_TASKS.filter(t => t.group === g));
+      return `<div><b>${LABTABS[g].label.replace(/^\d+ \u00b7 /, '')}</b>: ${cc.done}/${cc.total}${cc.done === cc.total ? ' \u2713' : ''}</div>`;
+    }).join('');
+    return {
+      open: c.done, total: c.total,
+      allOpen: all.done === all.total,
+      kick: 'Tasks \u00b7 ' + LABTABS[cur].label.replace(/^\d+ \u00b7 /, ''),
+      items: mine.map(railItemHTML).join(''),
+      foot: others + `<div style="margin-top:.3rem">${all.done === all.total ? '\u2713 every task in the factory is done \u2014 the gate is open.' : `The gate opens once all ${all.total} factory tasks are done.`}</div>`
+    };
+  }
+  const tasks = sectionTasks();
+  if (!tasks.length) {
+    /* a chapter step with nothing to do (a story beat, an event, a report).
+       Keep the rail in place — collapsed, with one quiet line — so the reading
+       column does not change width every time the student turns a page. */
+    if (S.scene !== 'chapter') return null;
+    return {
+      open: 0, total: 0, allOpen: true,
+      kick: 'Tasks \u00b7 this step',
+      items: '<div class="tr-item"><div class="tr-txt"><div class="tr-hint">Nothing to decide here \u2014 read on, then continue.</div></div></div>',
+      foot: ''
+    };
+  }
+  const c = taskCount(tasks);
+  return {
+    open: c.done, total: c.total,
+    allOpen: c.done === c.total,
+    kick: S.scene === 'chapter' ? 'Tasks \u00b7 this step' : 'Tasks',
+    items: tasks.map(railItemHTML).join(''),
+    foot: c.done === c.total ? 'Step complete \u2014 carry on.' : 'Finish this to move on.'
+  };
+}
+
+function railInnerHTML(m) {
+  const allCls = m.allOpen ? ' all' : '';
+  const count = m.total ? m.open + ' / ' + m.total : '\u2014';
+  const tab = m.total ? (m.allOpen ? '\u2713' : m.open + '/' + m.total) : '\u2014';
+  return `
+    <button class="tr-tab" data-a="rail-toggle" aria-expanded="false" title="Open the task list">
+      <span class="tr-tab-n${allCls}">${tab}</span>
+      <span class="tr-tab-l">Tasks</span>
+    </button>
+    <div class="tr-card">
+      <div class="tr-head">
+        <span class="tr-kick">${m.kick}</span>
+        <span class="tr-count${allCls}">${count}</span>
+        <button class="tr-toggle" data-a="rail-toggle" title="Collapse the task list" aria-expanded="true">\u276F</button>
+      </div>
+      ${m.items}
+      ${m.foot ? `<div class="tr-foot">${m.foot}</div>` : ''}
+    </div>`;
+}
+
+/* ---- sync: called after every render, and after every live lab update ---- */
+function railSync() {
+  const shell = q('#shell'), host = q('#rail');
+  if (!shell || !host) return;
+  const m = railBody();
+  if (!m) {
+    if (shell.className !== 'shell') shell.className = 'shell';
+    if (host.innerHTML) host.innerHTML = '';
+    host.className = 'taskrail empty';
+    S.rail.key = '';
+    return;
+  }
+
+  const key = sectionKey();
+  if (S.rail.key !== key) {
+    S.rail.key = key;
+    S.rail.pinned = false;
+    const firstTime = !S.rail.seen[key];
+    S.rail.seen[key] = 1;
+    /* open it so the tasks get read the first time; leave it out of the way when
+       there is nothing to do, or when the work here is already finished */
+    if (m.total === 0) S.rail.open = false;
+    else if (firstTime) S.rail.open = true;
+    else S.rail.open = !m.allOpen;
+  }
+
+  shell.className = 'shell ' + (S.rail.open ? 'rail-open' : 'rail-shut');
+  host.className = 'taskrail' + (S.rail.open ? '' : ' shut');
+  const fresh = railInnerHTML(m);
+  /* only touch the DOM when something really changed, so the panel never
+     flickers while a slider is being dragged */
+  if (host.innerHTML !== fresh) host.innerHTML = fresh;
+}
+
+ACTS['rail-toggle'] = () => {
+  S.rail.open = !S.rail.open;
+  S.rail.pinned = true;
+  S.rail.key = sectionKey();     // pinning applies to this section only
+  railSync(true);
+};
+
+/* award the insight the moment a lab task is banked */
+function awardLabTask(id) {
+  const t = LAB_TASKS.filter(x => x.id === id)[0];
+  if (!t || S.lab.missions[id]) return 0;
+  S.lab.missions[id] = 1;
+  S.insight += t.reward;
+  return t.reward;
+}
 
 /* ============================================================
    MARKET FORCES — debrief, teacher guide, boot
@@ -2593,11 +3482,11 @@ BEATS.mono = () => ([
 function rankOf(v) {
   const max = { short: 420, std: 2450, full: 4600 }[S.mode] || 4600;
   const r = v / max;
-  if (v < 0) return { t: 'AN EXPENSIVE LESSON', c: '#8E2124', note: 'You finished with a negative firm value. Every loss in this game came from a decision you can now explain.' };
-  if (r >= 0.7) return { t: 'MARKET MOGUL', c: '#0B6E9E', note: 'You found the profitable ground in every market and protected it. Outstanding.' };
-  if (r >= 0.45) return { t: 'PROFIT MAKER', c: '#1C6FD4', note: 'You read each market well and made the most of the power you were given.' };
-  if (r >= 0.2) return { t: 'STEADY OPERATOR', c: '#0E9F6E', note: 'You survived every market structure and earned a return. Look at the analysis below to find the profit you left behind.' };
-  return { t: 'SURVIVOR', c: '#C2721A', note: 'You kept the firm alive through four very different markets. The next section shows where the money was.' };
+  if (v < 0) return { t: 'AN EXPENSIVE LESSON', c: '#A3271B', note: 'You finished with a negative firm value. Every loss in this game came from a decision you can now explain.' };
+  if (r >= 0.7) return { t: 'MARKET MOGUL', c: '#1D4ED8', note: 'You found the profitable ground in every market and protected it. Outstanding.' };
+  if (r >= 0.45) return { t: 'PROFIT MAKER', c: PAL.blue, note: 'You read each market well and made the most of the power you were given.' };
+  if (r >= 0.2) return { t: 'STEADY OPERATOR', c: PAL.green, note: 'You survived every market structure and earned a return. Look at the analysis below to find the profit you left behind.' };
+  return { t: 'SURVIVOR', c: '#BE740F', note: 'You kept the firm alive through four very different markets. The next section shows where the money was.' };
 }
 
 /* Questions are authored once; product words are filled in when the page is drawn,
@@ -2620,31 +3509,33 @@ const QUESTIONS = [
     ]
   },
   {
-    ch: 'Monopolistic competition', tag: 'Chapter 2', qs: [
+    ch: 'Monopoly', tag: 'Chapter 2', qs: [
+      ['You chose a price and the quantity followed. Why is that the exact reverse of what a perfectly competitive firm does?', ''],
+      ['Explain in your own words why marginal revenue is below price for a monopolist. Your answer should contain the phrase \u201con all the units it was already selling\u201d.', ''],
+      ['The profit rectangle and the deadweight loss triangle are both losses to consumers. What is the difference, and who receives each of them?', ''],
+      ['You held a licence and a patent. Remove them \u2014 one at a time \u2014 and describe what would happen to your price, your output and your profit.', ''],
+      ['As the town\u2019s only employer you could also push the wage down. Who gained and who lost from that, and how is it the mirror image of the price you charged your customers?', ''],
+      ['The regulator capped your price at $30. Explain how a price cap reduced your market power without taking your licence away.', ''],
+      ['Is a monopolist always bad for society? Build the strongest argument you can on each side, using innovation, economies of scale and natural monopoly.', '']
+    ]
+  },
+  {
+    ch: 'Monopolistic competition', tag: 'Chapter 3', qs: [
       ['Your demand curve sloped downwards. What exactly gave you that market power, and how much of it did you really have?', ''],
       ['At launch you earned a solid profit. Two seasons later you earned almost nothing. Nothing about your factory had changed. Explain what happened.', ''],
       ['Advertising cost $140 and lifted demand by 40%. Did it pay for itself in your firm? Under what conditions would it?', ''],
       ['Describe two ways your outcome differed from the perfectly competitive outcome, and explain what consumers got in return.', ''],
-      ['Suppose the town had granted you a trademark so that no one could copy your version. What would that have done to your demand curve, and what would it have made you?', '']
+      ['In Chapter 2 a licence made you the only seller. Here you had no such protection. Explain how the same firm ends up with so much less power when the barrier disappears.', '']
     ]
   },
   {
-    ch: 'Oligopoly', tag: 'Chapter 3', qs: [
+    ch: 'Oligopoly', tag: 'Chapter 4', qs: [
       ['Before round 1, what did you expect Northwind to do, and why? Did their behaviour match your expectation?', ''],
       ['Work out the best response for each firm in the payoff matrix. Which cell is the Nash equilibrium, and why is it worse for both firms than the cooperative outcome?', ''],
       ['Holding the price high was best for the two of you together, and best for each of you individually \u2014 as long as the other held. Explain this apparent contradiction.', ''],
       ['Was the price agreement illegal? Was it wrong? Are those the same question?', ''],
       ['Imagine the two of you could sign a binding, legally enforceable agreement to hold the price at $44. What would happen to the price and output in the town, and who would lose?', ''],
       ['In real markets like this, firms often compete on advertising or product features instead of price. Why might they prefer that?', '']
-    ]
-  },
-  {
-    ch: 'Monopoly', tag: 'Chapter 4', qs: [
-      ['You chose a price and the quantity followed. Why is that the exact reverse of what a perfectly competitive firm does?', ''],
-      ['Explain in your own words why marginal revenue is below price for a monopolist. Your answer should contain the phrase \u201con all the units it was already selling\u201d.', ''],
-      ['The profit rectangle and the deadweight loss triangle are both losses to consumers. What is the difference, and who receives each of them?', ''],
-      ['The regulator capped your price at $30. Explain how a price cap reduced your market power without taking your licence away.', ''],
-      ['Is a monopolist always bad for society? Build the strongest argument you can on each side, using innovation, economies of scale and natural monopoly.', '']
     ]
   },
   {
@@ -2698,7 +3589,7 @@ SCENES.debrief = {
         </div>
       </div>
       <div>
-        <div class="card" style="background:#FFF9E8;border-color:#F0E0B8">
+        <div class="card" data-note="amber">
           <h3 style="margin-top:0">Now write it up</h3>
           <div class="small">The questions below are the real point of the game. Work through them in your notebook, one section at a time. Where a question asks you to explain something, use the numbers you actually saw on your own screen \u2014 not the textbook version.</div>
           <div class="btnrow">
@@ -2802,12 +3693,14 @@ function TEACHER_GUIDE() {
       <tr><td>1</td><td>Word gets out \u2014 three new ${sellers()} open</td><td>No barriers to entry; supply shifts right; price $40 \u2192 $27; profit becomes loss</td></tr>
       <tr><td>1</td><td>The shake-out \u2014 two firms close, demand rises</td><td>No barriers to exit; supply shifts left; price $27 \u2192 $34</td></tr>
       <tr><td>1</td><td>The long run \u2014 entry continues</td><td>Price converges on minimum AC, $30; P = MC = min AC; zero economic profit</td></tr>
-      <tr><td>2</td><td>Everyone copies you</td><td>Imitation shifts the firm\u2019s demand curve leftwards; profit falls from $318 to about $104</td></tr>
-      <tr><td>2</td><td>The profit disappears again</td><td>Long-run tangency: D tangent to AC, P = AC &gt; MC, excess capacity, normal profit</td></tr>
-      <tr><td>3</td><td>A quiet word from Northwind (cartel offer)</td><td>Collusion raises joint profit but is illegal and unstable</td></tr>
-      <tr><td>3</td><td>The regulator opens a file</td><td>Competition law; $800 fine if the firm agreed to fix prices</td></tr>
-      <tr><td>4</td><td>Some customers will pay more than others</td><td>Price discrimination; +$230 profit where groups can be identified and separated</td></tr>
-      <tr><td>4</td><td>Patent expires, regulator offers a price cap</td><td>Regulation of natural/legal monopoly; price cap to $30, output 90 \u2192 150</td></tr>
+      <tr><td>2</td><td>An exclusive licence and a patent</td><td>Barriers to entry created by regulation and by law; the firm becomes the market and the price is its to set</td></tr>
+      <tr><td>2</td><td>Some customers will pay more than others</td><td>Price discrimination; +$230 profit where groups can be identified and separated</td></tr>
+      <tr><td>2</td><td>The town\u2019s only employer</td><td>Monopsony: market power on the buying side. The wage is set below marginal revenue product, so employment falls and the gap is kept by the firm</td></tr>
+      <tr><td>2</td><td>Patent expires, regulator offers a price cap</td><td>Regulation of legal monopoly; price cap to $30, output 90 \u2192 150</td></tr>
+      <tr><td>3</td><td>Everyone copies you</td><td>Imitation shifts the firm\u2019s demand curve leftwards; profit falls from $318 to about $104</td></tr>
+      <tr><td>3</td><td>The profit disappears again</td><td>Long-run tangency: D tangent to AC, P = AC &gt; MC, excess capacity, normal profit</td></tr>
+      <tr><td>4</td><td>A quiet word from Northwind (cartel offer)</td><td>Collusion raises joint profit but is illegal and unstable</td></tr>
+      <tr><td>4</td><td>The regulator opens a file</td><td>Competition law; $800 fine if the firm agreed to fix prices</td></tr>
     </tbody>
   </table>
 
@@ -2821,32 +3714,34 @@ function TEACHER_GUIDE() {
 
   <h3>7 &middot; Reflection questions and expected answers</h3>
   <div class="body">These are the questions shown on the student debrief page. The notes below are the direction a good answer should take, not a marking scheme.</div>
-  <div class="q"><div class="qn">Chapter 1</div><div class="ans">
+  <div class="q"><div class="qn">Chapter 1 &middot; Perfect competition</div><div class="ans">
     <b>Price taking.</b> Homogeneous product plus many sellers means each firm faces a horizontal demand curve at the market price; any price above it sells nothing. There is no price decision to make.
     <br><b>The three seasons.</b> $40 with three ${sellers()} and positive profit; entry pushed the price to $27 and profit to a loss; exit and rising demand restored the price to $34; continued entry drove it to $30, where price equals minimum AC and economic profit is zero.
     <br><b>Producing at a loss.</b> Fixed cost is payable either way. As long as P &gt; AVC, output contributes to fixed cost and reduces the loss. Shut down when P &lt; minimum AVC ($18 here).
     <br><b>Who gains.</b> Consumers gain the product at the lowest possible average cost and at a price equal to marginal cost. No one is made worse off in the allocative sense; the firms simply earn only normal profit, which is not a loss \u2014 it is the return available elsewhere.
   </div></div>
-  <div class="q"><div class="qn">Chapter 2</div><div class="ans">
+  <div class="q"><div class="qn">Chapter 2 &middot; Monopoly</div><div class="ans">
+    <b>Price maker.</b> With no rivals and barriers to entry, the firm is the market: the market demand curve is its own, so quantity sold depends on the price it sets. A competitive firm faces a horizontal demand curve and quantity is its only choice.
+    <br><b>MR &lt; P.</b> To sell one more unit the monopolist must lower its price, and the lower price applies to all the units it was already selling. The extra revenue is therefore the new price minus the revenue lost on the earlier units \u2014 always less than price.
+    <br><b>Two losses.</b> The profit rectangle is a <i>transfer</i>: consumers pay more, the firm receives it. The deadweight loss triangle is a <i>destruction</i>: units that would have been worth more to buyers than they cost to produce are never made, and nobody receives that value.
+    <br><b>Removing the barriers.</b> Take away the patent and rivals can copy the process, so the demand curve shifts left and the price falls towards cost. Take away the licence as well and entry becomes free, which is exactly the world of Chapter 1 \u2014 price competed down to minimum average cost and profit competed away to normal. The barriers, not the firm, are what create the power.
+    <br><b>Monopsony.</b> The same firm, looking the other way down the market. As the town's only employer it faces an upward-sloping supply of labour, so hiring one more worker raises the wage for everyone it already employs: the marginal cost of labour is above the wage. It hires up to the point where that marginal cost equals the worker's marginal revenue product, then pays the lowest wage those workers will accept \u2014 below what they are worth to the firm. Workers lose the gap; employment is lower than it would be in a competitive labour market. Note the symmetry: in the product market the firm held price <i>above</i> marginal cost; in the input market it holds the wage <i>below</i> marginal revenue product. Both extract surplus and both shrink the quantity traded, and a deadweight loss appears either way.
+    <br><b>Price cap.</b> The cap lowers price towards marginal cost, which removes the reason to restrict output. The firm keeps its licence and still earns a normal return, but the profit from restricting output disappears.
+    <br><b>Both sides.</b> Against: higher prices, lower output, deadweight loss, weaker incentives to control costs ("X-inefficiency"). For: patent-protected monopoly profits can fund research that competitive firms cannot finance; large-scale production can lower average cost; and in natural monopoly a single producer is cheaper than duplicated networks. The exam answer is the balance, not a verdict.
+  </div></div>
+  <div class="q"><div class="qn">Chapter 3 &middot; Monopolistic competition</div><div class="ans">
     <b>Source of power.</b> Product differentiation \u2014 customers do not see the products as perfect substitutes, so the firm faces a downward-sloping demand curve and can choose price. The power is limited because close substitutes exist and entry is free.
     <br><b>The disappearing profit.</b> Imitation and entry shifted the firm\u2019s demand curve leftward. Cost curves unchanged, demand fell, so the profit-maximising price\u2013output combination moved to a point where P \u2248 AC.
     <br><b>Advertising.</b> In this model $140 of advertising costs $140 and lifts the price at which the same quantity can be sold, but only modestly: at launch it is roughly profit-neutral, after imitation it buys back about $10. Advertising pays only when the increase in demand (and the resulting margin) exceeds the cost of the campaign. Note the familiar "if it worked for everyone, it stops working for anyone" effect.
     <br><b>Versus perfect competition.</b> Price is above marginal cost and output is below the AC-minimising level (excess capacity), so the market is neither allocatively nor productively efficient. What consumers get in return is variety and choice.
-    <br><b>With a trademark.</b> Copying would be illegal, so entry would be blocked and the demand curve would not shift left. The firm would move towards monopoly \u2014 higher sustained profit, and the market toward the inefficiency of Chapter 4.
+    <br><b>Why the power is so much weaker than in Chapter 2.</b> In Chapter 2 a licence and a patent made entry illegal, so profit was protected. Here differentiation is the only defence and it can be copied, so the same firm ends up with a small, temporary margin instead of a durable one. This is the cleanest demonstration in the game that barriers to entry, not cleverness, decide how long profit lasts.
   </div></div>
-  <div class="q"><div class="qn">Chapter 3</div><div class="ans">
+  <div class="q"><div class="qn">Chapter 4 &middot; Oligopoly</div><div class="ans">
     <b>Best responses and Nash.</b> Whatever the rival does, cutting is the better move: if they hold, cutting earns $615 instead of $530; if they cut, cutting earns $250 instead of \u2212$125. So both cut, and the Nash equilibrium is the bottom-right cell \u2014 $250 each, worse for both than the $530 each available from mutual restraint.
     <br><b>The apparent contradiction.</b> This is the prisoner\u2019s dilemma: the joint-best outcome is not an equilibrium because each player has a unilateral incentive to deviate. Co-operation requires trust or enforcement, and neither is available.
     <br><b>Illegal versus wrong.</b> Price fixing is illegal under competition law because it restricts output and raises prices, harming consumers, and because the agreement is unstable it also wastes resources on policing it. Whether it is <i>wrong</i> is a normative question students should be able to argue both ways \u2014 the economics shows the damage, not the morality.
     <br><b>Enforceable cartel.</b> Output would fall and price rise towards the monopoly level; consumers and firms outside the agreement would lose; the two firms would split the resulting monopoly profit. This is why cartels are treated as a form of market failure.
     <br><b>Non-price competition.</b> It is legal, it can shift demand rather than merely redistribute it, and it is harder for a regulator to attack. It is also often self-cancelling, as the monopolistic competition chapter showed.
-  </div></div>
-  <div class="q"><div class="qn">Chapter 4</div><div class="ans">
-    <b>Price maker.</b> With no rivals and barriers to entry, the firm is the market: the market demand curve is its own, so quantity sold depends on the price it sets. A competitive firm faces a horizontal demand curve and quantity is its only choice.
-    <br><b>MR &lt; P.</b> To sell one more unit the monopolist must lower its price, and the lower price applies to all the units it was already selling. The extra revenue is therefore the new price minus the revenue lost on the earlier units \u2014 always less than price.
-    <br><b>Two losses.</b> The profit rectangle is a <i>transfer</i>: consumers pay more, the firm receives it. The deadweight loss triangle is a <i>destruction</i>: units that would have been worth more to buyers than they cost to produce are never made, and nobody receives that value.
-    <br><b>Price cap.</b> The cap lowers price towards marginal cost, which removes the reason to restrict output. The firm keeps its licence and still earns a normal return, but the profit from restricting output disappears.
-    <br><b>Both sides.</b> Against: higher prices, lower output, deadweight loss, weaker incentives to control costs ("X-inefficiency"). For: patent-protected monopoly profits can fund research that competitive firms cannot finance; large-scale production can lower average cost; and in natural monopoly a single producer is cheaper than duplicated networks. The exam answer is the balance, not a verdict.
   </div></div>
   <div class="q"><div class="qn">Synthesis</div><div class="ans">
     The single factor is <b>barriers to entry</b> \u2014 which determine how much of the profit is competed away. Where entry is free, profit is competed to normal levels; where entry is blocked, the firm keeps it. The identical workshop across all four chapters is the proof that the source of profit is the market structure, not the firm.
@@ -2868,8 +3763,9 @@ function TEACHER_GUIDE() {
     <li><b>\u201cZero economic profit means the business is failing.\u201d</b> The long-run perfect competition chapter makes this concrete: the firm still covers every cost including the owner\u2019s labour and capital. Normal profit is a real return, not a loss.</li>
     <li><b>\u201cA monopolist can charge whatever it likes.\u201d</b> The price slider is bounded by demand: raise the price and quantity collapses. The game forces students to trade the two off.</li>
     <li><b>\u201cFirms only shut down when they make a loss.\u201d</b> Season two is designed to break this. Students lose less by producing than by stopping, and the reason is the fixed/variable cost split they met in the factory.</li>
-    <li><b>\u201cIf you earned profit, you must have been skilful.\u201d</b> The comparison of Chapter 1 and Chapter 4 with identical technology is the corrective.</li>
-    <li><b>\u201cMarginal revenue is just price.\u201d</b> Students meet MR = P in Chapter 1 and then watch it fall below P in Chapters 2 and 4.</li>
+    <li><b>\u201cIf you earned profit, you must have been skilful.\u201d</b> The comparison of Chapter 1 and Chapter 2 with identical technology is the corrective.</li>
+    <li><b>\u201cMarginal revenue is just price.\u201d</b> Students meet MR = P in Chapter 1 and then watch it fall below P in Chapters 2 and 3.</li>
+    <li><b>\u201cMarket power is only about what you charge.\u201d</b> The monopsony episode shows the same power applied to what you <i>pay</i>. Students who can see both sides of the firm \u2014 its customers and its suppliers \u2014 are much harder to fool.</li>
     <li><b>\u201cAdvertising always pays.\u201d</b> In the model it is close to self-cancelling. Some students find this genuinely surprising, and it is worth a short discussion of real advertising in monopolistically competitive markets.</li>
   </ul>
 
@@ -2894,7 +3790,7 @@ ACTS['closeSheet'] = () => closeSheet();
     document.documentElement.dataset.fs = S.fs;
     bindGlobals();
     go('title');
-    window.MF = { S: S, ECON: ECON, BEATS: BEATS, beatsFor: beatsFor, ACTS: ACTS, SCENES: SCENES, PRODUCTS: PRODUCTS, COLOURS: COLOURS, CHAPTERS: CHAPTERS, VIEWS: VIEWS, go: go, enterBeat: enterBeat, advance: advance, drawViews: drawViews, mcFirm: mcFirm, monoState: monoState, socialOpt: socialOpt, dwlArea: dwlArea, cfgMonopoly: cfgMonopoly, cfgPCFirm: cfgPCFirm, cfgMCFirm: cfgMCFirm, chart: chart, artFactory: artFactory, artStreet: artStreet, AD_LEVELS: AD_LEVELS, oligoPay: oligoPay, QUESTIONS: QUESTIONS, TEACHER_GUIDE: TEACHER_GUIDE, rankOf: rankOf, seller: seller, sellers: sellers };
+    window.MF = { S: S, ECON: ECON, PAL: PAL, BEATS: BEATS, beatsFor: beatsFor, ACTS: ACTS, SCENES: SCENES, PRODUCTS: PRODUCTS, COLOURS: COLOURS, CHAPTERS: CHAPTERS, MODES: MODES, VIEWS: VIEWS, go: go, repaint: repaint, railSync: railSync, LAB_TASKS: LAB_TASKS, labPeerL: labPeerL, sectionTasks: sectionTasks, gateOpen: gateOpen, gateMissing: gateMissing, railBody: railBody, enterBeat: enterBeat, advance: advance, drawViews: drawViews, mcFirm: mcFirm, monoState: monoState, socialOpt: socialOpt, dwlArea: dwlArea, cfgMonopoly: cfgMonopoly, cfgPCFirm: cfgPCFirm, cfgMCFirm: cfgMCFirm, chart: chart, artFactory: artFactory, artStreet: artStreet, AD_LEVELS: AD_LEVELS, oligoPay: oligoPay, QUESTIONS: QUESTIONS, TEACHER_GUIDE: TEACHER_GUIDE, rankOf: rankOf, seller: seller, sellers: sellers };
   } catch (e) {
     document.getElementById('app').innerHTML = '<div class="card"><h2>Something went wrong</h2><pre class="small">' + (e && e.message) + '</pre></div>';
   }
